@@ -1,0 +1,70 @@
+#ifndef COURSETABLE_HPP
+#define COURSETABLE_HPP
+
+#include <QVector>
+#include <QString>
+
+const auto query_course_type = {
+    "0", // Default
+    "1-08", // 思想政治
+    "1-09", // 大学英语
+    "1-11", // 体育
+    "2-通识核心课",
+    "2-通选课",
+    "3-英文",
+    "2-与中国有关课程",
+    "1-07", // 全校公选课
+};
+
+// It can be better designed, what are your opinions?
+class CourseTime {
+protected:
+    int week_start;
+    int week_stop; // Included
+    int day_in_week;
+    int time_in_day;
+    int step;
+    QString classroom; // Course info from dean does not include this
+public:
+    CourseTime(const QString &s);
+    CourseTime(int w1, int w2, int d, int t, int step, QString c) :
+        week_start(w1), week_stop(w2), day_in_week(d),
+        time_in_day(t), step(step), classroom(c) {}
+    QString repr();
+    // Should I put a iterator here?
+};
+
+struct CourseEntry {
+    QString id;  // Can include non-digit characters
+    QString course_name;
+    QString arch_name;
+    QString college_name;
+    int class_no;
+    double credit; // Can be non-integer, such as 2.5
+    QString execute_plan_id; // Internal use
+    QVector<CourseTime> time; // May have multiple time schedules
+    QString teacher_name;
+    QString remarks;
+};
+
+struct QueryData {
+    QString course_name;
+    QString teacher_name;
+    QString xndxq;
+    QString course_type;
+    QString college;
+    int startrow;
+};
+
+class CourseTable {
+private:
+    QVector<CourseEntry> _course_data;
+public:
+    CourseTable();
+    void online_get(const QueryData &req);
+    void cache_get(QString path);
+    void cache_store(QString path);
+    QVector<CourseEntry> search(const QueryData &condition);
+};
+
+#endif // COURSETABLE_HPP
