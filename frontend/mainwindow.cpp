@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "aboutpage.h"
+#include "coursequerypage.h"
+#include "coursemanagepage.h"
+#include "gradequerypage.h"
 
 #include <QMessageBox>
 
@@ -15,21 +19,39 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_pressed()
+void MainWindow::on_SettingsButton_clicked() // Settings & About
 {
-    QMessageBox::information(this, "提示", "暂时不能给你明确答复！");
+    AboutPage* about = new AboutPage();
+    about->show();
 }
 
 
-void MainWindow::on_pushButton_4_clicked()
+void MainWindow::on_NoClearReplyButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(2); // TODO: Avoid magic number
+    QMessageBox qiangjibox;
+    qiangjibox.setIcon(QMessageBox::Warning);
+    qiangjibox.setText("暂时不能给你明确的答复。每个人承担自己的风险！");
+    qiangjibox.exec();
 }
 
 
-void MainWindow::on_pushButton_6_clicked()
+void MainWindow::on_CourseQueryButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(0); // TODO: Avoid magic number
+    CourseQueryPage* courseqry = new CourseQueryPage();
+    courseqry->show();
+}
+
+
+void MainWindow::on_GradeQueryButton_clicked()
+{
+    GradeQueryPage* gradeqry = new GradeQueryPage();
+    gradeqry->show();
+}
+
+
+void MainWindow::on_CourseManageButton_clicked()
+{
+    CourseManagePage* courseqry = new CourseManagePage();
+    courseqry->show();
 }
 
