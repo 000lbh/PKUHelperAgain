@@ -9,18 +9,36 @@ CONFIG += c++20
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    frontend/aboutpage.cpp \
+    frontend/coursemanagepage.cpp \
+    frontend/coursequerypage.cpp \
+    frontend/gradequerypage.cpp \
     main.cpp \
     frontend/mainwindow.cpp \
     backend/CourseTable.cpp
 
 HEADERS += \
+    frontend/aboutpage.h \
+    frontend/coursemanagepage.h \
+    frontend/coursequerypage.h \
+    frontend/gradequerypage.h \
     frontend/mainwindow.h \
     backend/CourseTable.hpp
 
 FORMS += \
+    frontend/aboutpage.ui \
+    frontend/coursemanagepage.ui \
+    frontend/coursequerypage.ui \
+    frontend/gradequerypage.ui \
     frontend/mainwindow.ui
+
+# ICON
+# RC_ICONS = favicon.png
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc
