@@ -2,12 +2,14 @@
 
 #include <QNetworkRequest>
 
-CourseTable::CourseTable() {
+CourseTable::CourseTable()
+    : available(false)
+{
     return;
 }
 
 void CourseTable::online_get(const QueryData &req) {
-    // Sanity check, you can move it to the front-end
+    // Sanity check, can be moved it to the front-end
     auto list = req.xndxq.split("-");
     if (list.length() != 3)
         // We need a basic exception here
@@ -36,6 +38,8 @@ course_type_fine:
     // Get data online from
     // http://www.dean.pku.edu.cn/service/web/courseSearch_do.php
     // method: POST
+    available = false;
     QNetworkRequest myreq;
+    //myreq.setHeader("User-Agent: ", nullptr);
     return;
 }

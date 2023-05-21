@@ -3,6 +3,7 @@
 
 #include <QVector>
 #include <QString>
+#include <QObject>
 
 const auto query_course_type = {
     "0", // Default
@@ -56,9 +57,11 @@ struct QueryData {
     int startrow;
 };
 
-class CourseTable {
+class CourseTable : QObject{
 private:
+    Q_OBJECT
     QVector<CourseEntry> _course_data;
+    bool available;
 public:
     CourseTable();
     void online_get(const QueryData &req);

@@ -34,3 +34,15 @@
 # VS VSCode
 .vscode
 .vs
+
+# Debug and release
+debug
+release
+
+# UI (these files should be automatically generated)
+ui_*.h
+*.user
+*.user.*
+*.vcxproj
+*.vcxproj.*
+*.stash
