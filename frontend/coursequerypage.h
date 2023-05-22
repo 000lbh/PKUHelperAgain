@@ -10,10 +10,11 @@ class CourseQueryPage;
 class CourseQueryPage : public QDialog
 {
     Q_OBJECT
-
+    explicit CourseQueryPage(QWidget *parent);
+    static CourseQueryPage *the_only_instance;
 public:
-    explicit CourseQueryPage(QWidget *parent = nullptr);
     ~CourseQueryPage();
+    static CourseQueryPage *get(QWidget *parent = nullptr);
 
 private:
     Ui::CourseQueryPage *ui;

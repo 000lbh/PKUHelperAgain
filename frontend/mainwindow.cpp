@@ -21,8 +21,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_SettingsButton_clicked() // Settings & About
 {
-    AboutPage* about = new AboutPage();
+    AboutPage* about = AboutPage::get(this);
     about->show();
+    about->setFocus();
 }
 
 
@@ -37,21 +38,24 @@ void MainWindow::on_NoClearReplyButton_clicked()
 
 void MainWindow::on_CourseQueryButton_clicked()
 {
-    CourseQueryPage* courseqry = new CourseQueryPage();
+    CourseQueryPage* courseqry = CourseQueryPage::get(this);
     courseqry->show();
+    courseqry->setFocus();
 }
 
 
 void MainWindow::on_GradeQueryButton_clicked()
 {
-    GradeQueryPage* gradeqry = new GradeQueryPage();
+    GradeQueryPage* gradeqry = GradeQueryPage::get(this);
     gradeqry->show();
+    gradeqry->setFocus();
 }
 
 
 void MainWindow::on_CourseManageButton_clicked()
 {
-    CourseManagePage* courseqry = new CourseManagePage();
-    courseqry->show();
+    CourseManagePage* courseman = CourseManagePage::get(this);
+    courseman->show();
+    courseman->setFocus();
 }
 
