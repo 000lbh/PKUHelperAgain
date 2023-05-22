@@ -10,10 +10,11 @@ class CourseManagePage;
 class CourseManagePage : public QDialog
 {
     Q_OBJECT
-
+    explicit CourseManagePage(QWidget *parent);
+    static CourseManagePage *the_only_instance;
 public:
-    explicit CourseManagePage(QWidget *parent = nullptr);
     ~CourseManagePage();
+    static CourseManagePage *get(QWidget *parent = nullptr);
 
 private:
     Ui::CourseManagePage *ui;

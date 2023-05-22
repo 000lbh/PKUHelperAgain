@@ -10,10 +10,11 @@ class GradeQueryPage;
 class GradeQueryPage : public QDialog
 {
     Q_OBJECT
-
+    explicit GradeQueryPage(QWidget *parent);
+    static GradeQueryPage *the_only_instance;
 public:
-    explicit GradeQueryPage(QWidget *parent = nullptr);
     ~GradeQueryPage();
+    static GradeQueryPage *get(QWidget *parent = nullptr);
 
 private:
     Ui::GradeQueryPage *ui;

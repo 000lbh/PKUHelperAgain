@@ -10,10 +10,11 @@ class AboutPage;
 class AboutPage : public QDialog
 {
     Q_OBJECT
-
+    explicit AboutPage(QWidget *parent);
+    static AboutPage *the_only_instance;
 public:
-    explicit AboutPage(QWidget *parent = nullptr);
     ~AboutPage();
+    static AboutPage *get(QWidget *parent = nullptr);
 
 private slots:
     void on_AboutOkButton_clicked();
