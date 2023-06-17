@@ -4,6 +4,7 @@
 #include <QVector>
 #include <QString>
 #include <QObject>
+#include <QNetworkAccessManager>
 
 const auto query_course_type = {
     "0", // Default
@@ -16,6 +17,9 @@ const auto query_course_type = {
     "2-与中国有关课程",
     "1-07", // 全校公选课
 };
+
+// Edge User-Agent Header
+const char user_agent[] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43";
 
 // It can be better designed, what are your opinions?
 class CourseTime {
@@ -38,14 +42,19 @@ public:
 struct CourseEntry {
     QString id;  // Can include non-digit characters
     QString course_name;
-    QString arch_name;
+    QString eng_name;
+    QString type_name;
     QString college_name;
     int class_no;
     double credit; // Can be non-integer, such as 2.5
     QString execute_plan_id; // Internal use
     QVector<CourseTime> time; // May have multiple time schedules
-    QString teacher_name;
+    QVector<QPair<QString, QString>> teachers; // teacher name and its title
     QString remarks;
+
+    CourseEntry() = default;
+    // Helper constructor function
+    CourseEntry(const QJsonObject &entry);
 };
 
 struct QueryData {
@@ -62,12 +71,26 @@ private:
     Q_OBJECT
     QVector<CourseEntry> _course_data;
     bool available;
+    QNetworkAccessManager qnam;
+    QueryData temp_req; // for network use
+    friend QNetworkAccessManager;
 public:
     CourseTable();
+    // asynchronize get data from web, emit signal void ready() when finished,
+    // or void fail() when failed
     void online_get(const QueryData &req);
-    void cache_get(QString path);
-    void cache_store(QString path);
+    // synchronize get data from database
+    bool cache_get(QString path);
+    // synchronize save data to database
+    bool cache_store(QString path);
     QVector<CourseEntry> search(const QueryData &condition);
+private slots:
+    void online_get_slot(QueryData req, int start);
+    void qnam_request_finished(QNetworkReply *response);
+signals:
+    void ready(); // When online get becomes ready, emit this signal;
+    void fail(QString reason); // When online get fails, emit this signal;
+    void online_get_signal(QueryData req, int start);
 };
 
 #endif // COURSETABLE_HPP
