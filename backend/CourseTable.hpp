@@ -66,14 +66,13 @@ struct QueryData {
     int startrow;
 };
 
-class CourseTable : QObject{
-private:
+class CourseTable : public QObject {
     Q_OBJECT
+private:
     QVector<CourseEntry> _course_data;
     bool available;
     QNetworkAccessManager qnam;
     QueryData temp_req; // for network use
-    friend QNetworkAccessManager;
 public:
     CourseTable();
     // asynchronize get data from web, emit signal void ready() when finished,
@@ -90,7 +89,8 @@ private slots:
 signals:
     void ready(); // When online get becomes ready, emit this signal;
     void fail(QString reason); // When online get fails, emit this signal;
-    void online_get_signal(QueryData req, int start);
+    void online_get_signal(QueryData req, int start); // For internal use only
+    void progress_update(int total, int current);
 };
 
 #endif // COURSETABLE_HPP

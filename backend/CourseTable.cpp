@@ -25,6 +25,7 @@ CourseEntry::CourseEntry(const QJsonObject &entry) {
 CourseTable::CourseTable()
     : available(true)
 {
+    connect(this, &CourseTable::online_get_signal, this, &CourseTable::online_get_slot);
     return;
 }
 
@@ -131,9 +132,11 @@ void CourseTable::qnam_request_finished(QNetworkReply *response) {
     }
     if (_course_data.size() >= total) {
         available = true;
+        disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         emit ready();
         return;
     }
+    emit progress_update(total, _course_data.size());
     emit online_get_signal(temp_req, _course_data.size());
     return;
 }
