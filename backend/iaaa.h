@@ -5,7 +5,9 @@
 
 #include <QObject>
 #include <QString>
-#include <QNetworkAccessManager>
+#include <QThread>
+#include <QMutex>
+#include "3rd/httplib/httplib.h"
 
 
 class IAAA : QObject
@@ -17,7 +19,6 @@ private:
     QString token;
     bool login_status;
     bool busy;
-    QNetworkAccessManager qnam;
 public:
     IAAA();
     explicit IAAA(const QString &username, const QString &password, bool autologin = false);
@@ -25,8 +26,9 @@ public:
     void setPassword(const QString &pasword);
     void login(bool block = false);
     QString getToken();
+private slots:
 signals:
-    void finish(bool success, QString reason);
+    void finished(bool success, QString reason);
 };
 
 #endif // IAAA_H

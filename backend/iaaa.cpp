@@ -7,6 +7,7 @@
 #include "http.h"
 
 #include "iaaa.h"
+#include "CourseTable.hpp"
 
 IAAA::IAAA()
     : username{}
@@ -40,8 +41,5 @@ void IAAA::login(bool block) {
         {"otpCode", ""},
         {"redirUrl", "https://portal.pku.edu.cn/portal2017/ssoLogin.do"}
     };
-    client.setMaxRetries(2);
-    client.setReadTimeout(2);
-    client.setRequestHeaders({{}, {}});
-    client.post(QUrl("https://iaaa.pku.edu.cn:443/iaaa/oauthlogin.do"), params);
+
 }
