@@ -77,7 +77,7 @@ public:
     CourseTable();
     // asynchronize get data from web, emit signal void ready() when finished,
     // or void fail() when failed
-    void online_get(const QueryData &req);
+    void online_get(const QueryData &req = QueryData());
     // synchronize get data from database
     bool cache_get(QString path);
     // synchronize save data to database

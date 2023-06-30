@@ -1,0 +1,10 @@
+*.cpp eol=lf
+*.h eol=lf
+*.hpp eol=lf
+*.qrc eol=lf
+*.qss eol=lf
+*.css eol=lf
+*.pro eol=lf
+*.ui eol=lf
+.gitattributes eol=lf
+.gitignore eol=lf
