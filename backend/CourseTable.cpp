@@ -15,7 +15,7 @@ CourseEntry::CourseEntry(const QJsonObject &entry) {
     course_name = entry.value("kcmc").toString();
     type_name = entry.value("kctxm").toString();
     college_name = entry.value("kkxsmc").toString();
-    credit = entry.value("xf").toDouble();
+    credit = entry.value("xf").toString().toDouble();
     execute_plan_id = entry.value("zxjhbh").toString();
     // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
     teachers = {{"Guowei", "Lecturer"}};
@@ -74,7 +74,7 @@ void CourseTable::online_get_slot(QueryData req, int start) {
     // Get data online from
     // https://dean.pku.edu.cn/service/web/courseSearch.php
     // method: POST
-    QNetworkRequest myreq(QUrl("https://dean.pku.edu.cn/service/web/courseSearch.php"));
+    QNetworkRequest myreq(QUrl("https://dean.pku.edu.cn/service/web/courseSearch_do.php"));
     myreq.setRawHeader("User-Agent", user_agent);
     myreq.setRawHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     myreq.setRawHeader("Connect", "keep-alive");
@@ -101,25 +101,26 @@ void CourseTable::qnam_request_finished(QNetworkReply *response) {
     }
 
     // Json decode ok?
-    QJsonDocument data;
     QJsonParseError jsonerror;
-    data.fromJson(response->readAll(), &jsonerror);
-    QNetworkRequest req = response->request();
+    QJsonDocument data = QJsonDocument::fromJson(response->readAll(), &jsonerror);
     response->deleteLater();
     if (jsonerror.error != jsonerror.NoError) {
         available = true;
         emit fail(jsonerror.errorString());
         return;
     }
-    if (data["status"] != "ok" ) {
+    if (!data.isObject() || data.isNull())
+        emit fail("Response data is null or not json object");
+    QJsonObject dataobj = data.object();
+    if (dataobj["status"].toString() != "ok" ) {
         available = true;
-        emit fail("Response data not OK");
+        emit fail("Response data not OK: " + dataobj["status"].toString());
         return;
     }
 
     // Json decode;
-    int total = data["count"].toInt();
-    QJsonValue courselist = data["courselist"];
+    int total = dataobj["count"].toString().toInt();
+    QJsonValue courselist = dataobj["courselist"];
     if (!courselist.isArray()) {
         available = true;
         emit fail("Cannot find course info");

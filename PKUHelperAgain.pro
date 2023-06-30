@@ -25,7 +25,8 @@ HEADERS += \
     frontend/coursequerypage.h \
     frontend/gradequerypage.h \
     frontend/mainwindow.h \
-    backend/CourseTable.hpp
+    backend/CourseTable.hpp \
+    backend/3rd/httplib/httplib.h
 
 FORMS += \
     frontend/aboutpage.ui \
@@ -33,6 +34,9 @@ FORMS += \
     frontend/coursequerypage.ui \
     frontend/gradequerypage.ui \
     frontend/mainwindow.ui
+
+# This is an extremely ugly style, however I don't know how to improve it
+LIBS += C:/Qt/Tools/OpenSSLv3/Win_x64/lib/libcrypto.lib C:/Qt/Tools/OpenSSLv3/Win_x64/lib/libssl.lib
 
 # ICON
 # RC_ICONS = favicon.png

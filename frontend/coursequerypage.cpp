@@ -1,5 +1,8 @@
+#include <QMessageBox>
+
 #include "coursequerypage.h"
 #include "ui_coursequerypage.h"
+#include "../backend/CourseTable.hpp"
 
 CourseQueryPage * CourseQueryPage::the_only_instance = nullptr;
 
@@ -20,4 +23,29 @@ CourseQueryPage *CourseQueryPage::get(QWidget *parent) {
     if (!the_only_instance)
         the_only_instance = new CourseQueryPage(parent);
     return the_only_instance;
+}
+
+void CourseQueryPage::on_pushButton_clicked()
+{
+    static CourseTable courses;
+    connect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
+    connect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
+    connect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
+    courses.online_get({"", "", "22-23-3", "0", "0", 0});
+    return;
+}
+
+void CourseQueryPage::update_progressbar(int total, int current)
+{
+    this->ui->progressBar->setValue(int(current / double(total) * 100.));
+}
+
+void CourseQueryPage::get_course_finished_succ()
+{
+    QMessageBox::information(this, "Hint", "Finished");
+}
+
+void CourseQueryPage::get_course_finished_fail(QString reason)
+{
+    QMessageBox::information(this, "Error", "Failed:" + reason);
 }
