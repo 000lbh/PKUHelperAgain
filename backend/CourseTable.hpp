@@ -74,7 +74,7 @@ private:
     QNetworkAccessManager qnam;
     QueryData temp_req; // for network use
 public:
-    CourseTable();
+    explicit CourseTable(QObject *parent = nullptr);
     // asynchronize get data from web, emit signal void ready() when finished,
     // or void fail() when failed
     void online_get(const QueryData &req = QueryData());

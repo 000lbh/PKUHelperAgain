@@ -22,8 +22,9 @@ CourseEntry::CourseEntry(const QJsonObject &entry) {
     // TODO: Need process qzz(start-stop week) and time
 }
 
-CourseTable::CourseTable()
-    : available(true)
+CourseTable::CourseTable(QObject *parent)
+    : QObject{parent}
+    , available{true}
 {
     connect(this, &CourseTable::online_get_signal, this, &CourseTable::online_get_slot);
     return;
