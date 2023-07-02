@@ -55,6 +55,9 @@ struct CourseEntry {
     CourseEntry() = default;
     // Helper constructor function
     CourseEntry(const QJsonObject &entry);
+
+    bool is_same(const CourseEntry &other);
+    bool operator==(const CourseEntry &other);
 };
 
 struct QueryData {

@@ -22,6 +22,14 @@ CourseEntry::CourseEntry(const QJsonObject &entry) {
     // TODO: Need process qzz(start-stop week) and time
 }
 
+bool CourseEntry::is_same(const CourseEntry &other) {
+    return id == other.id;
+}
+
+bool CourseEntry::operator==(const CourseEntry &other) {
+    return execute_plan_id == other.execute_plan_id;
+}
+
 CourseTable::CourseTable(QObject *parent)
     : QObject{parent}
     , available{true}
