@@ -10,7 +10,7 @@ class ScoreSheet : public QObject
 {
     Q_OBJECT
 private:
-    QList<std::pair<CourseEntry, QString>> _gradelist;
+    QMap<QString, QList<CourseEntry>> _gradelist;
     PKUPortal *internalportal;
     double gpa;
 public:
@@ -20,7 +20,7 @@ public:
     double get_gpa() const;
     //QList<std::pair<QString, double>> get_gpas() const;
     void merge(const ScoreSheet &other);
-    void diff(QList<QString> *added, QList<QString> *deleted, const ScoreSheet &other) const;
+    void diff(QList<CourseEntry> *added, QList<CourseEntry> *deleted, const ScoreSheet &other) const;
 
 private slots:
     void network_finished(QNetworkReply *response);

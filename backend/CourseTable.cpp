@@ -9,24 +9,44 @@
 #include <QJsonDocument>
 #include <QMap>
 
-CourseEntry::CourseEntry(const QJsonObject &entry) {
-    id = entry.value("kch").toString();
-    class_no = entry.value("jxbh").toInt();
-    course_name = entry.value("kcmc").toString();
-    type_name = entry.value("kctxm").toString();
-    college_name = entry.value("kkxsmc").toString();
-    credit = entry.value("xf").toString().toDouble();
-    execute_plan_id = entry.value("zxjhbh").toString();
-    // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
-    teachers = {{"Guowei", "Lecturer"}};
-    // TODO: Need process qzz(start-stop week) and time
+CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
+    if (source == Dean) {
+        id = entry.value("kch").toString();
+        class_no = entry.value("jxbh").toString().toInt();
+        course_name = entry.value("kcmc").toString();
+        type_name = entry.value("kctxm").toString();
+        college_name = entry.value("kkxsmc").toString();
+        credit = entry.value("xf").toString().toDouble();
+        execute_plan_id = entry.value("zxjhbh").toString();
+        // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
+        teachers = {{"Guowei", "Lecturer"}};
+        // TODO: Need process qzz(start-stop week) and time
+    }
+    else if (source == PortalScore) {
+        id = entry["kch"].toString();
+        class_no = entry["jxbh"].toString().toInt();
+        course_name = entry["kcmc"].toString();
+        eng_name = entry["ywmc"].toString();
+        type_name = entry["kctx"].toString();
+        credit = entry["xf"].toString().toDouble();
+        execute_plan_id = entry["zxjhbh"].toString();
+        for (const auto &i : entry["skjsxm"].toString().split(",")) {
+            auto &&tmp = i.split("$");
+            teachers.push_back({tmp[0].split("-")[1], tmp[2]});
+        }
+        grade = entry["xqcj"].toString();
+        bool gp_ok;
+        grade_point = entry["jd"].toString().toDouble(&gp_ok);
+        if (!gp_ok)
+            grade_point = NAN;
+    }
 }
 
-bool CourseEntry::is_same(const CourseEntry &other) {
+bool CourseEntry::is_same(const CourseEntry &other) const {
     return id == other.id;
 }
 
-bool CourseEntry::operator==(const CourseEntry &other) {
+bool CourseEntry::operator==(const CourseEntry &other) const {
     return execute_plan_id == other.execute_plan_id;
 }
 

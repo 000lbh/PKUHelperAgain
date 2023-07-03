@@ -51,13 +51,21 @@ struct CourseEntry {
     QVector<CourseTime> time; // May have multiple time schedules
     QVector<QPair<QString, QString>> teachers; // teacher name and its title
     QString remarks;
+    QString grade;
+    double grade_point;
+
+    enum JsonSource {
+        Dean,
+        PortalScore,
+        PortalTable,
+    };
 
     CourseEntry() = default;
     // Helper constructor function
-    CourseEntry(const QJsonObject &entry);
+    CourseEntry(const QJsonObject &entry, JsonSource source = Dean);
 
-    bool is_same(const CourseEntry &other);
-    bool operator==(const CourseEntry &other);
+    bool is_same(const CourseEntry &other) const;
+    bool operator==(const CourseEntry &other) const ;
 };
 
 struct QueryData {
