@@ -54,9 +54,30 @@ void ScoreSheet::merge(const ScoreSheet &other)
     }
 }
 
+// new courses pushed to added list,
+// deleted courses pushed to deleted list.
 void ScoreSheet::diff(QList<CourseEntry> *added, QList<CourseEntry> *deleted, const ScoreSheet &other) const
 {
     QSet<QString> matched;
+    for (const QString &sems : other._gradelist.keys()) {
+        for (const auto &i : other._gradelist[sems]) {
+            bool have_the_same = false;
+            for (const auto &j : _gradelist[sems]) {
+                if (i == j) {
+                    have_the_same = true;
+                    matched.insert(j.execute_plan_id);
+                }
+            }
+            if (!have_the_same)
+                added->push_back(i);
+        }
+    }
+    for (const auto &i : _gradelist.values()) {
+        for (const auto &j : i) {
+            if (matched.constFind(j.execute_plan_id) != matched.cend())
+                deleted->push_back(j);
+        }
+    }
 }
 
 void ScoreSheet::network_finished(QNetworkReply *response)
