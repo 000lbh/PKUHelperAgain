@@ -1,4 +1,4 @@
-QT       += core gui network
+QT       += core gui network sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,7 @@ SOURCES += \
     backend/iaaa.cpp \
     backend/pkuportal.cpp \
     backend/scoresheet.cpp \
+    backend/unifieddatabase.cpp \
     frontend/aboutpage.cpp \
     frontend/coursemanagepage.cpp \
     frontend/coursequerypage.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     backend/iaaa.h \
     backend/pkuportal.h \
     backend/scoresheet.h \
+    backend/unifieddatabase.h \
     frontend/aboutpage.h \
     frontend/coursemanagepage.h \
     frontend/coursequerypage.h \
