@@ -6,6 +6,8 @@
 #include <QObject>
 #include <QSql>
 #include <QSqlDatabase>
+#include <QSqlQuery>
+#include "CourseTable.hpp"
 
 
 class UnifiedDatabase : public QObject
@@ -22,9 +24,8 @@ public:
     UnifiedDatabase &getInstance();
 
     // Course Table DB
-    void ct_query(const QString &key, const QString &value);
-    void ct_set();
-    void ct_reset();
+    QList<CourseEntry> ct_query(const QString &sems, const QString &key, const QString &value = QString{});
+    void ct_reset(const QString &sems, const QList<CourseEntry> &courses);
     void ct_merge();
 
     // User manipulation

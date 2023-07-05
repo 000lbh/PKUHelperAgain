@@ -7,7 +7,19 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QByteArray>
+#include <QDataStream>
 #include <QMap>
+
+QDataStream &operator<<(QDataStream &stream, const CourseTime &time)
+{
+    return stream << time.time_in_day << time.classroom << time.day_in_week << time.week_start << time.week_stop << time.step;
+}
+
+QDataStream &operator>>(QDataStream &stream, CourseTime &time)
+{
+    return stream >> time.time_in_day >> time.classroom >> time.day_in_week >> time.week_start >> time.week_stop >> time.step;
+}
 
 CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
     if (source == Dean) {

@@ -22,21 +22,24 @@ const auto query_course_type = {
 const char user_agent[] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43";
 
 // It can be better designed, what are your opinions?
-class CourseTime {
-protected:
+struct CourseTime {
     int week_start;
     int week_stop; // Included
     int day_in_week;
     int time_in_day;
     int step;
     QString classroom; // Course info from dean does not include this
-public:
+
+    CourseTime() = default;
     CourseTime(const QString &s);
     CourseTime(int w1, int w2, int d, int t, int step, QString c) :
         week_start(w1), week_stop(w2), day_in_week(d),
         time_in_day(t), step(step), classroom(c) {}
     QString repr();
-    // Should I put a iterator here?
+    // Should I put an iterator here?
+
+    friend QDataStream &operator<<(QDataStream &stream, const CourseTime &time);
+    friend QDataStream &operator>>(QDataStream &stream, CourseTime &time);
 };
 
 struct CourseEntry {
