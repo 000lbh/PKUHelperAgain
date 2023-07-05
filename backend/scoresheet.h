@@ -21,6 +21,9 @@ public:
     //QList<std::pair<QString, double>> get_gpas() const;
     void merge(const ScoreSheet &other);
     void diff(QList<CourseEntry> *added, QList<CourseEntry> *deleted, const ScoreSheet &other) const;
+    QMap<QString, QList<CourseEntry>> &get_gradelist();
+    const QMap<QString, QList<CourseEntry>> &get_gradelist() const;
+    const QMap<QString, QList<CourseEntry>> &get_gradelist_const() const;
 
 private slots:
     void network_finished(QNetworkReply *response);

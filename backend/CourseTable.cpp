@@ -34,7 +34,7 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         teachers = {{"Guowei", "Lecturer"}};
         // TODO: Need process qzz(start-stop week) and time
     }
-    else if (source == PortalScore) {
+    else if (source == Portal) {
         id = entry["kch"].toString();
         class_no = entry["jxbh"].toString().toInt();
         course_name = entry["kcmc"].toString();
@@ -44,6 +44,8 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         execute_plan_id = entry["zxjhbh"].toString();
         for (const auto &i : entry["skjsxm"].toString().split(",")) {
             auto &&tmp = i.split("$");
+            if (tmp.length() < 3)
+                continue;
             teachers.push_back({tmp[0].split("-")[1], tmp[2]});
         }
         grade = entry["xqcj"].toString();

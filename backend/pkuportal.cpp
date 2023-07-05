@@ -42,6 +42,7 @@ void PKUPortal::network_finished(QNetworkReply *response)
 {
     if (!response->isFinished())
         return;
+    disconnect(&qnam, &QNetworkAccessManager::finished, this, &PKUPortal::network_finished);
     if (response->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 302)
         return;
     if (response->error() != response->NoError) {

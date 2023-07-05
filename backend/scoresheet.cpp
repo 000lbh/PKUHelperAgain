@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QMessageBox>
 
 ScoreSheet::ScoreSheet(QObject *parent)
     : QObject{parent}
@@ -13,7 +14,7 @@ ScoreSheet::ScoreSheet(QObject *parent)
 
 void ScoreSheet::online_get(PKUPortal &portal)
 {
-    if (!internalportal) {
+    if (internalportal) {
         emit finished(false, "Cannot re-entry");
         return;
     }
@@ -24,7 +25,8 @@ void ScoreSheet::online_get(PKUPortal &portal)
         return;
     }
     connect(&portal.qnam, &QNetworkAccessManager::finished, this, &ScoreSheet::network_finished);
-    portal.qnam.post(myreq, QByteArray{});
+    auto tmp = portal.qnam.get(myreq);
+    QMessageBox::information(nullptr, QString{"error#%1"}.arg(tmp->error()), tmp->errorString());
 }
 
 double ScoreSheet::get_gpa() const
@@ -80,6 +82,21 @@ void ScoreSheet::diff(QList<CourseEntry> *added, QList<CourseEntry> *deleted, co
     }
 }
 
+QMap<QString, QList<CourseEntry>> &ScoreSheet::get_gradelist()
+{
+    return _gradelist;
+}
+
+const QMap<QString, QList<CourseEntry>> &ScoreSheet::get_gradelist() const
+{
+    return _gradelist;
+}
+
+const QMap<QString, QList<CourseEntry>> &ScoreSheet::get_gradelist_const() const
+{
+    return _gradelist;
+}
+
 void ScoreSheet::network_finished(QNetworkReply *response)
 {
     disconnect(&internalportal->qnam, &QNetworkAccessManager::finished, this, &ScoreSheet::network_finished);
@@ -115,8 +132,9 @@ void ScoreSheet::network_finished(QNetworkReply *response)
         QJsonObject iobj = i.toObject();
         QJsonArray listobj = iobj["list"].toArray();
         for (const auto &j : listobj) {
-            _gradelist[iobj["xnd"].toString() + "-" + iobj["xq"].toString()].push_back(CourseEntry(j.toObject()));
+            _gradelist[iobj["xnd"].toString() + "-" + iobj["xq"].toString()].push_back(CourseEntry{j.toObject(), CourseEntry::Portal});
         }
     }
-    gpa = dataobj["gpa"].toString().toDouble();
+    gpa = dataobj["gpa"].toObject()["gpa"].toString().toDouble();
+    emit finished(true, QString{});
 }
