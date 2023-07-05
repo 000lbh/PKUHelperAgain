@@ -138,16 +138,6 @@
     <string>查询</string>
    </property>
   </widget>
-  <widget class="QTableView" name="tableView">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>270</y>
-     <width>721</width>
-     <height>271</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="rsult_overview">
    <property name="geometry">
     <rect>
@@ -173,6 +163,36 @@
    <property name="value">
     <number>0</number>
    </property>
+  </widget>
+  <widget class="QTableWidget" name="courseTable">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>260</y>
+     <width>701</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>课号</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>课程名</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>学院</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>学分</string>
+    </property>
+   </column>
   </widget>
  </widget>
  <resources>

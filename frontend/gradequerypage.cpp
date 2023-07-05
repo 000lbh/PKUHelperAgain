@@ -6,7 +6,7 @@ public:
     double gpa;
     QString name;
     int credit;
-    int semester;
+    int semester; // used for sorting, not a must.
     GradeOfCourse(double _gpa, QString _name, int _credit, int _semester = 0) : gpa(_gpa),name(_name),credit(_credit),semester(_semester) {}
 };
 
