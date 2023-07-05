@@ -39,13 +39,10 @@ QList<CourseEntry> UnifiedDatabase::ct_query(QString sems, const QueryData &requ
         myqry.addBindValue(request.id);
     }
     else {
-        //myqry.prepare("SELECT * FROM " + sems + " WHERE remarks LIKE '%" + request.remark + "%';");
-        //myqry.addBindValue("%" + request.course_name + "%");
-        //myqry.addBindValue("%" + request.course_name + "%");
-        //myqry.addBindValue("%" + request.teacher_name + "%");
-        //myqry.addBindValue("%" + request.remark + "%");
-        myqry.prepare("SELECT * FROM " + sems + " WHERE remarks = ?;");
-        myqry.addBindValue(request.remark);
+        myqry.prepare("SELECT * FROM " + sems + " WHERE remarks LIKE ? AND teachers LIKE ? AND course_name LIKE ?;");
+        myqry.addBindValue("%" + request.remark + "%");
+        myqry.addBindValue("%" + request.teacher_name + "%");
+        myqry.addBindValue("%" + request.course_name + "%");
     }
     if (!myqry.exec()) {
         if (errmsg)

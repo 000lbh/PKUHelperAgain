@@ -33,6 +33,7 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
         teachers = {{"Guowei", "Lecturer"}};
         // TODO: Need process qzz(start-stop week) and time
+        remarks = entry.value("bz").toString();
     }
     else if (source == Portal) {
         id = entry["kch"].toString();
