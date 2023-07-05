@@ -24,8 +24,8 @@ public:
     static UnifiedDatabase &getInstance();
 
     // Course Table DB
-    QList<CourseEntry> ct_query(const QString &sems, const QString &key, const QString &value = QString{});
-    void ct_reset(const QString &sems, const QList<CourseEntry> &courses);
+    QList<CourseEntry> ct_query(QString sems, const QueryData &request, QString *errmsg = nullptr);
+    void ct_reset(QString sems, const QList<CourseEntry> &courses);
     void ct_merge();
 
     // User manipulation

@@ -26,13 +26,45 @@ CourseQueryPage *CourseQueryPage::get(QWidget *parent) {
     return the_only_instance;
 }
 
-void CourseQueryPage::on_pushButton_clicked()
+void CourseQueryPage::on_updateButton_clicked()
 {
     connect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
     connect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     connect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
+    this->ui->widget->setEnabled(false);
     courses.online_get({"", "", ui->xndxqEdit->text(), "0", "0", 0});
     return;
+}
+
+void CourseQueryPage::on_queryButton_clicked()
+{
+    QString errmsg;
+    QueryData request{
+        ui->kcmcEdit->text(),
+        ui->jsmcEdit->text(),
+        ui->xndxqEdit->text(),
+        "0",
+        "0",
+        ui->remarkEdit->text(),
+        ui->kchEdit->text(),
+        0
+    };
+    QList<CourseEntry> courses{UnifiedDatabase::getInstance().ct_query(ui->xndxqEdit->text(), request, &errmsg)};
+    if (errmsg != QString{}) {
+        QMessageBox::critical(this, "Error", errmsg);
+        return;
+    }
+    ui->courseTable->clearContents();
+    int row = 0;
+    for(const CourseEntry& course : courses) {
+        if (ui->courseTable->rowCount() <= row)
+            ui->courseTable->insertRow(row);
+        ui->courseTable->setItem(row, 0, new QTableWidgetItem(course.id));
+        ui->courseTable->setItem(row, 1, new QTableWidgetItem(course.course_name));
+        ui->courseTable->setItem(row, 2, new QTableWidgetItem(course.college_name));
+        ui->courseTable->setItem(row, 3, new QTableWidgetItem(QString::number(course.credit)));
+        row++;
+    }
 }
 
 void CourseQueryPage::update_progressbar(int total, int current)
@@ -58,16 +90,19 @@ QString get_course_time(QVector<CourseTime> ctime){
 void CourseQueryPage::get_course_finished_succ()
 {
     this->ui->progressBar->setValue(100);
+    this->ui->widget->setEnabled(true);
     disconnect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
     disconnect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     disconnect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
     QMessageBox::information(this, "Hint", "Finished");
     QVector<CourseEntry> course_table_query = courses.get_course_table();
     UnifiedDatabase::getInstance().ct_reset(courses.get_semester(),courses.get_course_table());
+    ui->courseTable->clearContents();
     int row = 0;
     ui->courseTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     for(const CourseEntry& course : course_table_query) {
-        ui->courseTable->insertRow(row);
+        if (ui->courseTable->rowCount() <= row)
+            ui->courseTable->insertRow(row);
         ui->courseTable->setItem(row, 0, new QTableWidgetItem(course.id));
         ui->courseTable->setItem(row, 1, new QTableWidgetItem(course.course_name));
         ui->courseTable->setItem(row, 2, new QTableWidgetItem(course.college_name));
@@ -78,6 +113,8 @@ void CourseQueryPage::get_course_finished_succ()
 
 void CourseQueryPage::get_course_finished_fail(QString reason)
 {
+    this->ui->progressBar->setValue(100);
+    this->ui->widget->setEnabled(true);
     disconnect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
     disconnect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     disconnect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);

@@ -76,6 +76,8 @@ struct QueryData {
     QString xndxq;
     QString course_type;
     QString college;
+    QString remark;
+    QString id;
     int startrow;
 };
 

@@ -1,6 +1,7 @@
 #include <QMessageBox>
 #include <QDataStream>
 #include <QByteArray>
+#include <QSqlError>
 
 #include "unifieddatabase.h"
 
@@ -8,6 +9,8 @@ UnifiedDatabase::UnifiedDatabase(QObject *parent)
     : QObject{parent}
     , CourseTableDB{QSqlDatabase::addDatabase("QSQLITE", "ctdb")}
 {
+    CourseTableDB.setDatabaseName("ctdb.db");
+    //CourseTableDB.setConnectOptions("");
     if (!CourseTableDB.open()) {
         QMessageBox::warning(nullptr, "Fatal", "Cannot initialize database, application terminating...");
         throw "failed";
@@ -26,18 +29,28 @@ UnifiedDatabase &UnifiedDatabase::getInstance()
     return the_only_instance;
 }
 
-QList<CourseEntry> UnifiedDatabase::ct_query(const QString &sems, const QString &key, const QString &value)
+QList<CourseEntry> UnifiedDatabase::ct_query(QString sems, const QueryData &request, QString *errmsg)
 {
+    sems.replace("-", "_");
+    sems.push_front("s");
     QSqlQuery myqry{CourseTableDB};
-    if (value == QString{}) {
-        myqry.prepare("SELECT * FROM ?");
-        myqry.addBindValue(sems);
+    if (request.id != QString{}) {
+        myqry.prepare("SELECT * FROM " + sems + " WHERE id = ?;");
+        myqry.addBindValue(request.id);
     }
     else {
-        myqry.prepare("SELECT * FROM ? WHERE ? LIKE ?");
-        myqry.addBindValue(sems);
-        myqry.addBindValue(key);
-        myqry.addBindValue("%" + value + "%");
+        //myqry.prepare("SELECT * FROM " + sems + " WHERE remarks LIKE '%" + request.remark + "%';");
+        //myqry.addBindValue("%" + request.course_name + "%");
+        //myqry.addBindValue("%" + request.course_name + "%");
+        //myqry.addBindValue("%" + request.teacher_name + "%");
+        //myqry.addBindValue("%" + request.remark + "%");
+        myqry.prepare("SELECT * FROM " + sems + " WHERE remarks = ?;");
+        myqry.addBindValue(request.remark);
+    }
+    if (!myqry.exec()) {
+        if (errmsg)
+            *errmsg = myqry.lastError().text();
+        return {};
     }
     QList<CourseEntry> result{};
     while (myqry.next()) {
@@ -64,8 +77,11 @@ QList<CourseEntry> UnifiedDatabase::ct_query(const QString &sems, const QString 
     return result;
 }
 
-void UnifiedDatabase::ct_reset(const QString &sems, const QList<CourseEntry> &courses)
+void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
 {
+    sems.replace("-", "_");
+    sems.push_front("s");
+    CourseTableDB.exec(QString{"DROP TABLE %1"}.arg(sems));
     CourseTableDB.exec(QString{"CREATE TABLE %1 ("
                                "id              TEXT,"
                                "course_name     TEXT,"
@@ -79,17 +95,16 @@ void UnifiedDatabase::ct_reset(const QString &sems, const QList<CourseEntry> &co
                                "teachers        BLOB,"
                                "remarks         TEXT)"
                                ";"}.arg(sems));
-    CourseTableDB.exec(QString{"DELETE FROM %1"}.arg(sems));
+    qDebug() << CourseTableDB.lastError().text();
     QSqlQuery myqry(CourseTableDB);
     for (const auto &i : courses) {
         QByteArray time;
         QByteArray teachers;
-        QDataStream timedata(time);
-        QDataStream teachersdata(teachers);
+        QDataStream timedata(&time, QDataStream::WriteOnly);
+        QDataStream teachersdata(&teachers, QDataStream::WriteOnly);
         timedata << i.time;
         teachersdata << i.teachers;
-        myqry.prepare("INSERT INTO ? VALUES (?,?,?,?,?,?,?,?,?,?,?);");
-        myqry.addBindValue(sems);
+        myqry.prepare(QString{"INSERT INTO %1 VALUES (?,?,?,?,?,?,?,?,?,?,?);"}.arg(sems));
         myqry.addBindValue(i.id);
         myqry.addBindValue(i.course_name);
         myqry.addBindValue(i.eng_name);
@@ -101,5 +116,7 @@ void UnifiedDatabase::ct_reset(const QString &sems, const QList<CourseEntry> &co
         myqry.addBindValue(time);
         myqry.addBindValue(teachers);
         myqry.addBindValue(i.remarks);
+        if (!myqry.exec())
+            qDebug() << myqry.lastError().text();
     }
 }

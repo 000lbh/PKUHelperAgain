@@ -20,7 +20,8 @@ public:
     static CourseQueryPage *get(QWidget *parent = nullptr);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_updateButton_clicked();
+    void on_queryButton_clicked();
 
 public slots:
     void get_course_finished_succ();

@@ -23,6 +23,7 @@ void LoginDialog::resizeEvent(QResizeEvent *event)
 
 void LoginDialog::accept()
 {
+    ui->buttonBox->setEnabled(false);
     if (ui->usernameEdit->text() == QString{}) {
         done(0);
         return;
