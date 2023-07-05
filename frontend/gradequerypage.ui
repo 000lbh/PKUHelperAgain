@@ -17,6 +17,63 @@
    <iconset resource="../res.qrc">
     <normaloff>:/favicon.png</normaloff>:/favicon.png</iconset>
   </property>
+  <widget class="QPushButton" name="QueryGradeButton">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>20</y>
+     <width>201</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>成绩查询</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="AverageGpa">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>80</y>
+     <width>151</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>综合GPA ：</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="GradeTable">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>110</y>
+     <width>641</width>
+     <height>441</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <column>
+    <property name="text">
+     <string>课程名</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>学分</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>成绩</string>
+    </property>
+   </column>
+  </widget>
  </widget>
  <resources>
   <include location="../res.qrc"/>

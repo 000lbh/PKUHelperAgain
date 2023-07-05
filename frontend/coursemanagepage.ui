@@ -17,6 +17,42 @@
    <iconset resource="../res.qrc">
     <normaloff>:/favicon.png</normaloff>:/favicon.png</iconset>
   </property>
+  <widget class="QCalendarWidget" name="Calendar">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>80</y>
+     <width>521</width>
+     <height>401</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="TitleLabel">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>40</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>日 程 表</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="AddArrangement">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>490</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>添加日程</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="../res.qrc"/>

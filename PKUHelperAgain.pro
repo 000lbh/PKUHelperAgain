@@ -9,6 +9,9 @@ CONFIG += c++20
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    backend/iaaa.cpp \
+    backend/pkuportal.cpp \
+    backend/scoresheet.cpp \
     frontend/aboutpage.cpp \
     frontend/coursemanagepage.cpp \
     frontend/coursequerypage.cpp \
@@ -18,6 +21,9 @@ SOURCES += \
     backend/CourseTable.cpp
 
 HEADERS += \
+    backend/iaaa.h \
+    backend/pkuportal.h \
+    backend/scoresheet.h \
     frontend/aboutpage.h \
     frontend/coursemanagepage.h \
     frontend/coursequerypage.h \

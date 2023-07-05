@@ -9,21 +9,50 @@
 #include <QJsonDocument>
 #include <QMap>
 
-CourseEntry::CourseEntry(const QJsonObject &entry) {
-    id = entry.value("kch").toString();
-    class_no = entry.value("jxbh").toInt();
-    course_name = entry.value("kcmc").toString();
-    type_name = entry.value("kctxm").toString();
-    college_name = entry.value("kkxsmc").toString();
-    credit = entry.value("xf").toDouble();
-    execute_plan_id = entry.value("zxjhbh").toString();
-    // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
-    teachers = {{"Guowei", "Lecturer"}};
-    // TODO: Need process qzz(start-stop week) and time
+CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
+    if (source == Dean) {
+        id = entry.value("kch").toString();
+        class_no = entry.value("jxbh").toString().toInt();
+        course_name = entry.value("kcmc").toString();
+        type_name = entry.value("kctxm").toString();
+        college_name = entry.value("kkxsmc").toString();
+        credit = entry.value("xf").toString().toDouble();
+        execute_plan_id = entry.value("zxjhbh").toString();
+        // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
+        teachers = {{"Guowei", "Lecturer"}};
+        // TODO: Need process qzz(start-stop week) and time
+    }
+    else if (source == PortalScore) {
+        id = entry["kch"].toString();
+        class_no = entry["jxbh"].toString().toInt();
+        course_name = entry["kcmc"].toString();
+        eng_name = entry["ywmc"].toString();
+        type_name = entry["kctx"].toString();
+        credit = entry["xf"].toString().toDouble();
+        execute_plan_id = entry["zxjhbh"].toString();
+        for (const auto &i : entry["skjsxm"].toString().split(",")) {
+            auto &&tmp = i.split("$");
+            teachers.push_back({tmp[0].split("-")[1], tmp[2]});
+        }
+        grade = entry["xqcj"].toString();
+        bool gp_ok;
+        grade_point = entry["jd"].toString().toDouble(&gp_ok);
+        if (!gp_ok)
+            grade_point = NAN;
+    }
 }
 
-CourseTable::CourseTable()
-    : available(true)
+bool CourseEntry::is_same(const CourseEntry &other) const {
+    return id == other.id;
+}
+
+bool CourseEntry::operator==(const CourseEntry &other) const {
+    return execute_plan_id == other.execute_plan_id;
+}
+
+CourseTable::CourseTable(QObject *parent)
+    : QObject{parent}
+    , available{true}
 {
     connect(this, &CourseTable::online_get_signal, this, &CourseTable::online_get_slot);
     return;
@@ -63,8 +92,9 @@ course_type_fine:
 
     available = false;
     this->temp_req = req;
+    _course_data.clear();
 
-    qnam.connectToHostEncrypted("dean.pku.edu.cn");
+    //qnam.connectToHostEncrypted("dean.pku.edu.cn");
     connect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
     emit online_get_signal(req, 0);
     return;
@@ -74,7 +104,7 @@ void CourseTable::online_get_slot(QueryData req, int start) {
     // Get data online from
     // https://dean.pku.edu.cn/service/web/courseSearch.php
     // method: POST
-    QNetworkRequest myreq(QUrl("https://dean.pku.edu.cn/service/web/courseSearch.php"));
+    QNetworkRequest myreq(QUrl("https://dean.pku.edu.cn/service/web/courseSearch_do.php"));
     myreq.setRawHeader("User-Agent", user_agent);
     myreq.setRawHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     myreq.setRawHeader("Connect", "keep-alive");
@@ -92,37 +122,44 @@ void CourseTable::online_get_slot(QueryData req, int start) {
 }
 
 void CourseTable::qnam_request_finished(QNetworkReply *response) {
+    if (!response->isReadable())
+        return;
     // Response status OK?
     if (response->error() != QNetworkReply::NoError) {
         available = true;
         emit fail(response->errorString());
         response->deleteLater();
+        disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         return;
     }
 
     // Json decode ok?
-    QJsonDocument data;
     QJsonParseError jsonerror;
-    data.fromJson(response->readAll(), &jsonerror);
-    QNetworkRequest req = response->request();
+    QJsonDocument data = QJsonDocument::fromJson(response->readAll(), &jsonerror);
     response->deleteLater();
     if (jsonerror.error != jsonerror.NoError) {
         available = true;
         emit fail(jsonerror.errorString());
+        disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         return;
     }
-    if (data["status"] != "ok" ) {
+    if (!data.isObject() || data.isNull())
+        emit fail("Response data is null or not json object");
+    QJsonObject dataobj = data.object();
+    if (dataobj["status"].toString() != "ok" ) {
         available = true;
-        emit fail("Response data not OK");
+        emit fail("Response data not OK: " + dataobj["status"].toString());
+        disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         return;
     }
 
     // Json decode;
-    int total = data["count"].toInt();
-    QJsonValue courselist = data["courselist"];
+    int total = dataobj["count"].toString().toInt();
+    QJsonValue courselist = dataobj["courselist"];
     if (!courselist.isArray()) {
         available = true;
         emit fail("Cannot find course info");
+        disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         return;
 
     }
@@ -134,6 +171,7 @@ void CourseTable::qnam_request_finished(QNetworkReply *response) {
         available = true;
         disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         emit ready();
+        disconnect(&qnam, &QNetworkAccessManager::finished, this, &CourseTable::qnam_request_finished);
         return;
     }
     emit progress_update(total, _course_data.size());

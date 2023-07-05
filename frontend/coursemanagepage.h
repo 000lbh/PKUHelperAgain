@@ -16,6 +16,11 @@ public:
     ~CourseManagePage();
     static CourseManagePage *get(QWidget *parent = nullptr);
 
+private slots:
+    void on_AddArrangement_clicked();
+
+    void on_Calendar_clicked(const QDate &date);
+
 private:
     Ui::CourseManagePage *ui;
 };

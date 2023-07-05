@@ -16,6 +16,9 @@ public:
     ~GradeQueryPage();
     static GradeQueryPage *get(QWidget *parent = nullptr);
 
+private slots:
+    void on_QueryGradeButton_clicked();
+
 private:
     Ui::GradeQueryPage *ui;
 };

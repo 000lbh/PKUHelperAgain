@@ -51,10 +51,21 @@ struct CourseEntry {
     QVector<CourseTime> time; // May have multiple time schedules
     QVector<QPair<QString, QString>> teachers; // teacher name and its title
     QString remarks;
+    QString grade;
+    double grade_point;
+
+    enum JsonSource {
+        Dean,
+        PortalScore,
+        PortalTable,
+    };
 
     CourseEntry() = default;
     // Helper constructor function
-    CourseEntry(const QJsonObject &entry);
+    CourseEntry(const QJsonObject &entry, JsonSource source = Dean);
+
+    bool is_same(const CourseEntry &other) const;
+    bool operator==(const CourseEntry &other) const ;
 };
 
 struct QueryData {
@@ -74,10 +85,10 @@ private:
     QNetworkAccessManager qnam;
     QueryData temp_req; // for network use
 public:
-    CourseTable();
+    explicit CourseTable(QObject *parent = nullptr);
     // asynchronize get data from web, emit signal void ready() when finished,
     // or void fail() when failed
-    void online_get(const QueryData &req);
+    void online_get(const QueryData &req = QueryData());
     // synchronize get data from database
     bool cache_get(QString path);
     // synchronize save data to database
