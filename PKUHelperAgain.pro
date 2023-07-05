@@ -14,9 +14,11 @@ SOURCES += \
     backend/scoresheet.cpp \
     backend/unifieddatabase.cpp \
     frontend/aboutpage.cpp \
+    frontend/clickablelabel.cpp \
     frontend/coursemanagepage.cpp \
     frontend/coursequerypage.cpp \
     frontend/gradequerypage.cpp \
+    frontend/logindialog.cpp \
     main.cpp \
     frontend/mainwindow.cpp \
     backend/CourseTable.cpp
@@ -27,9 +29,11 @@ HEADERS += \
     backend/scoresheet.h \
     backend/unifieddatabase.h \
     frontend/aboutpage.h \
+    frontend/clickablelabel.h \
     frontend/coursemanagepage.h \
     frontend/coursequerypage.h \
     frontend/gradequerypage.h \
+    frontend/logindialog.h \
     frontend/mainwindow.h \
     backend/CourseTable.hpp
 
@@ -38,6 +42,7 @@ FORMS += \
     frontend/coursemanagepage.ui \
     frontend/coursequerypage.ui \
     frontend/gradequerypage.ui \
+    frontend/logindialog.ui \
     frontend/mainwindow.ui
 
 # ICON

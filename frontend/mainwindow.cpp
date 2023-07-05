@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "logindialog.h"
 #include "ui_mainwindow.h"
 #include "aboutpage.h"
 #include "coursequerypage.h"
@@ -57,5 +58,15 @@ void MainWindow::on_CourseManageButton_clicked()
     CourseManagePage* courseman = CourseManagePage::get(this);
     courseman->show();
     courseman->setFocus();
+}
+
+
+void MainWindow::on_loginLabel_clicked()
+{
+    LoginDialog dialog(this);
+    int result;
+    if ((result = dialog.exec()))
+        ui->loginLabel->setText("Logged in as " + IAAA::get_instance().get_username() + (result == 1 ? "(online)" : "(offline)"));
+    return;
 }
 

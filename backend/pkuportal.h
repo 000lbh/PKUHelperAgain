@@ -20,6 +20,8 @@ public:
 
     void login(IAAA &iaaa);
 
+    static PKUPortal &get_instance();
+
 private slots:
     void network_finished(QNetworkReply *response);
 

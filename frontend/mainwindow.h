@@ -27,6 +27,8 @@ private slots:
 
     void on_CourseManageButton_clicked();
 
+    void on_loginLabel_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

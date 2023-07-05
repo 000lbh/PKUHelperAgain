@@ -13,6 +13,15 @@
 
 IAAA::IAAA(QObject *parent)
     : QObject{parent}
+    , params{
+          {"userName", ""},
+          {"password", ""},
+          {"appid", "portal2017"},
+          {"otpCode", ""},
+          {"smsCode", ""},
+          {"randCode", ""},
+          {"redirUrl", "https://portal.pku.edu.cn/portal2017/ssoLogin.do"}
+      }
 {
 
 }
@@ -24,7 +33,7 @@ IAAA::IAAA(const QString &username,
            QObject *parent)
     : QObject{parent}
     , params{
-          {"username", username},
+          {"userName", username},
           {"password", password},
           {"appid", "portal2017"},
           {"otpCode", otpCode},
@@ -46,6 +55,28 @@ QByteArray IAAA::urlencode(const QMap<QString, QString> &params) {
     return result;
 }
 
+void IAAA::set_username(const QString &username)
+{
+    params["userName"] = username;
+    return;
+}
+
+void IAAA::set_password(const QString &password)
+{
+    params["password"] = password;
+    return;
+}
+
+QString IAAA::get_username()
+{
+    return params["userName"];
+}
+
+QString IAAA::get_token()
+{
+    return token;
+}
+
 void IAAA::login()
 {
     QByteArray rawparams = urlencode(params);
@@ -54,12 +85,19 @@ void IAAA::login()
     myreq.setRawHeader("Host", "iaaa.pku.edu.cn");
     myreq.setRawHeader("Origin", "https://iaaa.pku.edu.cn/iaaa/oauth.jsp");
     myreq.setRawHeader("Referer", "https://iaaa.pku.edu.cn/iaaa/oauth.jsp");
+    myreq.setRawHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     connect(&qnam, &QNetworkAccessManager::finished, this, &IAAA::network_finished);
     qnam.post(myreq, rawparams);
 }
 
 bool IAAA::is_available() {
     return token != "";
+}
+
+IAAA &IAAA::get_instance()
+{
+    static IAAA iaaa;
+    return iaaa;
 }
 
 void IAAA::network_finished(QNetworkReply *response)

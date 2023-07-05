@@ -26,6 +26,7 @@ public:
     void set_otpCode(const QString &otpCode);
     void set_smsCode(const QString &smsCode);
     QString get_token();
+    QString get_username();
     bool is_available();
 
     void login();
@@ -34,6 +35,8 @@ public:
 
     // Unused API
     void set_app(const QString &appid, const QString &redirUrl);
+
+    static IAAA &get_instance();
 
 private slots:
     void network_finished(QNetworkReply *response);

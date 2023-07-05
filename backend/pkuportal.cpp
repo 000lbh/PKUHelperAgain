@@ -32,6 +32,12 @@ void PKUPortal::login(IAAA &iaaa)
     qnam.get(myreq);
 }
 
+PKUPortal &PKUPortal::get_instance()
+{
+    static PKUPortal pkuportal;
+    return pkuportal;
+}
+
 void PKUPortal::network_finished(QNetworkReply *response)
 {
     if (!response->isFinished())
