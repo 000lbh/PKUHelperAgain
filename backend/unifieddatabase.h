@@ -21,7 +21,7 @@ class UnifiedDatabase : public QObject
     QSqlDatabase DdlDB;
 public:
 
-    UnifiedDatabase &getInstance();
+    static UnifiedDatabase &getInstance();
 
     // Course Table DB
     QList<CourseEntry> ct_query(const QString &sems, const QString &key, const QString &value = QString{});

@@ -2,6 +2,7 @@
 
 #include "coursequerypage.h"
 #include "ui_coursequerypage.h"
+#include "../backend/unifieddatabase.h"
 #include "../backend/CourseTable.hpp"
 
 CourseQueryPage * CourseQueryPage::the_only_instance = nullptr;
@@ -62,6 +63,7 @@ void CourseQueryPage::get_course_finished_succ()
     disconnect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
     QMessageBox::information(this, "Hint", "Finished");
     QVector<CourseEntry> course_table_query = courses.get_course_table();
+    UnifiedDatabase::getInstance().ct_reset(courses.get_semester(),courses.get_course_table());
     int row = 0;
     ui->courseTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     for(const CourseEntry& course : course_table_query) {
