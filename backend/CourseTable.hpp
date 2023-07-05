@@ -27,7 +27,7 @@ struct CourseTime {
     int week_stop; // Included
     int day_in_week;
     int time_in_day;
-    int step;
+    int step; // 1 denotes for every week, 2 denotes for odd/even weeks
     QString classroom; // Course info from dean does not include this
 
     CourseTime() = default;
@@ -97,6 +97,7 @@ public:
     // synchronize save data to database
     bool cache_store(QString path);
     QVector<CourseEntry> search(const QueryData &condition);
+    QVector<CourseEntry> get_course_table() {return _course_data;}
 private slots:
     void online_get_slot(QueryData req, int start);
     void qnam_request_finished(QNetworkReply *response);
