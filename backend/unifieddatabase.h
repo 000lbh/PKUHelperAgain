@@ -31,8 +31,8 @@ public:
     // User manipulation
 
     // User-specific db connect. All below need to execute this first
-    void user_connect(const QString &username, const QString &password = QString{});
-    void user_new(const QString &username, const QString &password = QString{});
+    bool user_connect(const QString &username, bool autocreate = true);
+    void user_new(const QString &username);
     void user_query(const QString &username);
     // Note that password is to protect user's presonal data from leaking,
     // instead of unauthorized removing. Operate this with caution and

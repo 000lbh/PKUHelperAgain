@@ -18,9 +18,12 @@ public:
 
 private slots:
     void on_QueryGradeButton_clicked();
+    void makeColor();
 
 private:
     Ui::GradeQueryPage *ui;
+    enum ColorMethod {no, pf, th, lvl};
+    ColorMethod getColorMethod();
 };
 
 #endif // GRADEQUERYPAGE_H

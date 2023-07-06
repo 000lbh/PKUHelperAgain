@@ -46,7 +46,7 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         time += "第" + raw_start_end_week.section('-', 0, 0) + "周到第" + raw_start_end_week.section('-', 1, 1) + "周:";
 
         // 使用正则表达式提取每天的上课时间
-        QRegularExpression regex("<p>(.*?)\\(第(\\d+)节-第(\\d+)节\\)</p>");
+        static const QRegularExpression regex("<p>(.*?)\\(第(\\d+)节-第(\\d+)节\\)</p>");
         QRegularExpressionMatchIterator it = regex.globalMatch(raw_day_in_week);
         int dot_cnt = 0; // for processing ","
         while (it.hasNext()) {
@@ -61,7 +61,6 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
             }
         }
 
-        // TODO: Need process qzz(start-stop week) and time
         remarks = entry.value("bz").toString();
     }
     else if (source == Portal) {

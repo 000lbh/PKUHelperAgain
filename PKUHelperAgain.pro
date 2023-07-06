@@ -35,7 +35,8 @@ HEADERS += \
     frontend/gradequerypage.h \
     frontend/logindialog.h \
     frontend/mainwindow.h \
-    backend/CourseTable.hpp
+    backend/CourseTable.hpp \
+    frontend/tableitem.h
 
 FORMS += \
     frontend/aboutpage.ui \

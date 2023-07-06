@@ -1,51 +1,11 @@
 #include <QMessageBox>
-#include <QDesktopServices>
 
 #include "coursequerypage.h"
 #include "ui_coursequerypage.h"
+#include "tableitem.h"
 #include "backend/unifieddatabase.h"
 #include "backend/CourseTable.hpp"
 #include "backend/iaaa.h"
-
-class RefTableItem final : public QTableWidgetItem
-{
-    QString href;
-public:
-    explicit RefTableItem(const QString &text, const QString &href)
-        : QTableWidgetItem(text), href{href}
-    {
-        QFont font = this->font();
-        font.setUnderline(true);
-        this->setFont(font);
-        this->setTextAlignment(Qt::AlignCenter);
-        return;
-    }
-    void exec() {
-        QDesktopServices::openUrl(QUrl(href));
-        return;
-    }
-};
-
-class EleTableItem final : public QTableWidgetItem
-{
-    CourseEntry course_info;
-public:
-    explicit EleTableItem(const QString &text, const CourseEntry &entry)
-        : QTableWidgetItem(text), course_info{entry}
-    {
-        QFont font = this->font();
-        font.setUnderline(true);
-        this->setFont(font);
-        this->setTextAlignment(Qt::AlignCenter);
-        return;
-    }
-    void exec() {
-        if (IAAA::get_instance().get_username() == QString{})
-            QMessageBox::critical(CourseQueryPage::get(), "Error", "Please login (can be offline) first!");
-        else
-            QMessageBox::critical(CourseQueryPage::get(), "Error", "Not implemented yet!");
-    }
-};
 
 CourseQueryPage * CourseQueryPage::the_only_instance = nullptr;
 
