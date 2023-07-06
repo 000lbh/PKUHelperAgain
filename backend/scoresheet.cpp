@@ -25,8 +25,7 @@ void ScoreSheet::online_get(PKUPortal &portal)
         return;
     }
     connect(&portal.qnam, &QNetworkAccessManager::finished, this, &ScoreSheet::network_finished);
-    auto tmp = portal.qnam.get(myreq);
-    QMessageBox::information(nullptr, QString{"error#%1"}.arg(tmp->error()), tmp->errorString());
+    portal.qnam.get(myreq);
 }
 
 double ScoreSheet::get_gpa() const
@@ -76,7 +75,7 @@ void ScoreSheet::diff(QList<CourseEntry> *added, QList<CourseEntry> *deleted, co
     }
     for (const auto &i : _gradelist.values()) {
         for (const auto &j : i) {
-            if (matched.constFind(j.execute_plan_id) != matched.cend())
+            if (matched.constFind(j.execute_plan_id) == matched.cend())
                 deleted->push_back(j);
         }
     }

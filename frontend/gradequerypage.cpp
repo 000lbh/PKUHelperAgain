@@ -10,6 +10,9 @@ GradeQueryPage *GradeQueryPage::the_only_instance = nullptr;
 
 GradeQueryPage::GradeQueryPage(QWidget *parent) :
     QDialog(parent),
+    cur_scores{nullptr},
+    next_scores{nullptr},
+    timer{this},
     ui(new Ui::GradeQueryPage)
 {
     ui->setupUi(this);
@@ -18,6 +21,7 @@ GradeQueryPage::GradeQueryPage(QWidget *parent) :
     connect(ui->noColorBtn, &QRadioButton::clicked, this, &GradeQueryPage::makeColor);
     connect(ui->thColorBtn, &QRadioButton::clicked, this, &GradeQueryPage::makeColor);
     connect(ui->pfColorBtn, &QRadioButton::clicked, this, &GradeQueryPage::makeColor);
+    timer.callOnTimeout(this, &GradeQueryPage::on_QueryGradeButton_clicked);
 }
 
 GradeQueryPage *GradeQueryPage::get(QWidget *parent) {
@@ -179,26 +183,32 @@ void GradeQueryPage::makeColor()
 
 void GradeQueryPage::on_QueryGradeButton_clicked()
 {
-    ScoreSheet scores;
-    bool finished{false};
-    bool query_success;
-    QString query_reason;
-    connect(&scores, &ScoreSheet::finished, this, [&](bool success, QString reason){
-        finished = true;
-        query_success = success;
-        query_reason = reason;
-    });
-    scores.online_get(PKUPortal::get_instance());
-    if (!query_success) {
-        QMessageBox::critical(this, "Error", query_reason);
+    next_scores = new ScoreSheet{};
+    ui->QueryGradeButton->setEnabled(false);
+    connect(next_scores, &ScoreSheet::finished, this, &GradeQueryPage::updateGrade);
+    next_scores->online_get(PKUPortal::get_instance());
+}
+
+void GradeQueryPage::updateGrade(bool success, QString reason) {
+    disconnect(next_scores, &ScoreSheet::finished, this, &GradeQueryPage::updateGrade);
+    ui->QueryGradeButton->setEnabled(true);
+    if (!success) {
+        QMessageBox::critical(this, "Error", reason);
         return;
     }
-    /* all data in this part are not well initialized.
-     * please finish this process later.
-    */
-    ui->AverageGpa->setText(QString::asprintf("综合GPA：%.3lf", scores.get_gpa()));
+    if (cur_scores) {
+        QList<CourseEntry> add{}, deleted{};
+        cur_scores->diff(&add, &deleted, *next_scores);
+        if (add.size() != 0 || deleted.size() != 0) {
+            QMessageBox::information(this, "Score Update", QString::asprintf("You have %d course(s) added and %d course(s) deleted", add.size(), deleted.size()));
+        }
+        delete cur_scores;
+    }
+    cur_scores = next_scores;
+    next_scores = nullptr;
+    ui->AverageGpa->setText(QString::asprintf("综合GPA：%.3lf", cur_scores->get_gpa()));
     int row = 0;
-    for(const auto &[sems, lists] : scores.get_gradelist_const().toStdMap()) {
+    for(const auto &[sems, lists] : cur_scores->get_gradelist_const().toStdMap()) {
         for (const CourseEntry &grade : lists) {
             if (ui->GradeTable->rowCount() <= row)
                 ui->GradeTable->insertRow(row);
@@ -250,5 +260,17 @@ void GradeQueryPage::on_scoreVisBox_clicked()
         dynamic_cast<GradeTableItem *>(ui->GradeTable->item(i, 4))->setVisibility(ui->scoreVisBox->isChecked());
     }
     return;
+}
+
+
+void GradeQueryPage::on_refreshBox_stateChanged(int arg1)
+{
+    if (ui->refreshBox->isChecked()) {
+        timer.setInterval(ui->timeEdit->time().msecsSinceStartOfDay());
+        timer.start();
+    }
+    else {
+        timer.stop();
+    }
 }
 

@@ -131,6 +131,9 @@
      <second>30</second>
     </time>
    </property>
+   <property name="displayFormat">
+    <string>mm:ss</string>
+   </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
