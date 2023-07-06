@@ -77,6 +77,11 @@ QString IAAA::get_token()
     return token;
 }
 
+bool IAAA::has_password()
+{
+    return params["password"] != QString{};
+}
+
 void IAAA::login()
 {
     QByteArray rawparams = urlencode(params);

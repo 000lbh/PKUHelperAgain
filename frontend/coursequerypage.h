@@ -2,6 +2,7 @@
 #define COURSEQUERYPAGE_H
 
 #include <QDialog>
+#include <QTableWidgetItem>
 
 #include "backend/CourseTable.hpp"
 
@@ -22,6 +23,10 @@ public:
 private slots:
     void on_updateButton_clicked();
     void on_queryButton_clicked();
+
+    void on_courseTable_itemDoubleClicked(QTableWidgetItem *item);
+
+    void on_courseTable_itemClicked(QTableWidgetItem *item);
 
 public slots:
     void get_course_finished_succ();

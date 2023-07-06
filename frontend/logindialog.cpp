@@ -12,6 +12,8 @@ LoginDialog::LoginDialog(QWidget *parent, IAAA &iaaa, PKUPortal &pkuportal) :
 {
     ui->setupUi(this);
     ui->usernameEdit->setText(iaaa.get_username());
+    if (iaaa.has_password())
+        ui->passwordEdit->setPlaceholderText("(Not Changed)");
 }
 
 void LoginDialog::resizeEvent(QResizeEvent *event)

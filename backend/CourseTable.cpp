@@ -30,8 +30,15 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         college_name = entry.value("kkxsmc").toString();
         credit = entry.value("xf").toString().toDouble();
         execute_plan_id = entry.value("zxjhbh").toString();
-        // TODO: Need XML process such things like "<p>John</p><p>Mike</p>"
-        teachers = {{"Guowei", "Lecturer"}};
+        // teacher info process
+        QString rawteachers = entry.value("teacher").toString();
+        while (rawteachers.contains("<p>")) {
+            auto i = rawteachers.indexOf("<p>");
+            rawteachers.remove(0, i + 3);
+            i = rawteachers.indexOf("</p>");
+            teachers.push_back({rawteachers.sliced(0, i), ""});
+            rawteachers.remove(0, i + 4);
+        }
         // TODO: Need process qzz(start-stop week) and time
         remarks = entry.value("bz").toString();
     }

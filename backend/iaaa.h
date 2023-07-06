@@ -27,6 +27,7 @@ public:
     void set_smsCode(const QString &smsCode);
     QString get_token();
     QString get_username();
+    bool has_password();
     bool is_available();
 
     void login();

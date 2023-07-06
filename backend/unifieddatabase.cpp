@@ -53,9 +53,9 @@ QList<CourseEntry> UnifiedDatabase::ct_query(QString sems, const QueryData &requ
     while (myqry.next()) {
         CourseEntry tmp;
         QByteArray teachers;
-        QDataStream teachersdata(teachers);
+        QDataStream teachersdata(&teachers, QDataStream::ReadOnly);
         QByteArray time;
-        QDataStream timedata(time);
+        QDataStream timedata(&time, QDataStream::ReadOnly);
         tmp.id = myqry.value(0).toString();
         tmp.course_name = myqry.value(1).toString();
         tmp.eng_name = myqry.value(2).toString();

@@ -75,8 +75,23 @@
      <x>40</x>
      <y>260</y>
      <width>701</width>
-     <height>321</height>
+     <height>301</height>
     </rect>
+   </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QAbstractScrollArea::AdjustToContents</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::NoSelection</enum>
+   </property>
+   <property name="columnCount">
+    <number>8</number>
    </property>
    <column>
     <property name="text">
@@ -96,6 +111,26 @@
    <column>
     <property name="text">
      <string>学分</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>授课老师</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>上课时间</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>查看</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>添加到课表</string>
     </property>
    </column>
   </widget>
@@ -125,7 +160,7 @@
     <string>如果你填写了课程号，其他条件将被忽略</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -190,6 +225,19 @@
      <widget class="QLineEdit" name="remarkEdit"/>
     </item>
    </layout>
+  </widget>
+  <widget class="QLineEdit" name="tableHintEdit">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>570</y>
+     <width>701</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources>

@@ -1,9 +1,51 @@
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "coursequerypage.h"
 #include "ui_coursequerypage.h"
-#include "../backend/unifieddatabase.h"
-#include "../backend/CourseTable.hpp"
+#include "backend/unifieddatabase.h"
+#include "backend/CourseTable.hpp"
+#include "backend/iaaa.h"
+
+class RefTableItem final : public QTableWidgetItem
+{
+    QString href;
+public:
+    explicit RefTableItem(const QString &text, const QString &href)
+        : QTableWidgetItem(text), href{href}
+    {
+        QFont font = this->font();
+        font.setUnderline(true);
+        this->setFont(font);
+        this->setTextAlignment(Qt::AlignCenter);
+        return;
+    }
+    void exec() {
+        QDesktopServices::openUrl(QUrl(href));
+        return;
+    }
+};
+
+class EleTableItem final : public QTableWidgetItem
+{
+    CourseEntry course_info;
+public:
+    explicit EleTableItem(const QString &text, const CourseEntry &entry)
+        : QTableWidgetItem(text), course_info{entry}
+    {
+        QFont font = this->font();
+        font.setUnderline(true);
+        this->setFont(font);
+        this->setTextAlignment(Qt::AlignCenter);
+        return;
+    }
+    void exec() {
+        if (IAAA::get_instance().get_username() == QString{})
+            QMessageBox::critical(CourseQueryPage::get(), "Error", "Please login (can be offline) first!");
+        else
+            QMessageBox::critical(CourseQueryPage::get(), "Error", "Not implemented yet!");
+    }
+};
 
 CourseQueryPage * CourseQueryPage::the_only_instance = nullptr;
 
@@ -31,7 +73,7 @@ void CourseQueryPage::on_updateButton_clicked()
     connect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
     connect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     connect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
-    this->ui->widget->setEnabled(false);
+    this->setEnabled(false);
     courses.online_get({"", "", ui->xndxqEdit->text(), "0", "0", 0});
     return;
 }
@@ -63,8 +105,21 @@ void CourseQueryPage::on_queryButton_clicked()
         ui->courseTable->setItem(row, 1, new QTableWidgetItem(course.course_name));
         ui->courseTable->setItem(row, 2, new QTableWidgetItem(course.college_name));
         ui->courseTable->setItem(row, 3, new QTableWidgetItem(QString::number(course.credit)));
+        QString teacher{};
+        for (auto &[i, j] : course.teachers)
+            if (j != QString{})
+                teacher += i + '(' + j + ')' + ',';
+            else
+                teacher += i + ',';
+        teacher.chop(1);
+        ui->courseTable->setItem(row, 4, new QTableWidgetItem(teacher));
+        ui->courseTable->setItem(row, 6, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + course.execute_plan_id));
+        ui->courseTable->setItem(row, 7, new EleTableItem("双击添加到课表", course));
         row++;
     }
+    int rrowcnt = ui->courseTable->rowCount() - row;
+    for (int i = 0; i < rrowcnt; i++)
+        ui->courseTable->removeRow(row);
 }
 
 void CourseQueryPage::update_progressbar(int total, int current)
@@ -90,7 +145,7 @@ QString get_course_time(QVector<CourseTime> ctime){
 void CourseQueryPage::get_course_finished_succ()
 {
     this->ui->progressBar->setValue(100);
-    this->ui->widget->setEnabled(true);
+    this->setEnabled(true);
     disconnect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
     disconnect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     disconnect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
@@ -107,16 +162,50 @@ void CourseQueryPage::get_course_finished_succ()
         ui->courseTable->setItem(row, 1, new QTableWidgetItem(course.course_name));
         ui->courseTable->setItem(row, 2, new QTableWidgetItem(course.college_name));
         ui->courseTable->setItem(row, 3, new QTableWidgetItem(QString::number(course.credit)));
+        QString teacher{};
+        for (auto &[i, j] : course.teachers)
+            if (j != QString{})
+                teacher += i + '(' + j + ')' + ',';
+            else
+                teacher += i + ',';
+        teacher.chop(1);
+        ui->courseTable->setItem(row, 4, new QTableWidgetItem(teacher));
+        ui->courseTable->setItem(row, 6, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + course.execute_plan_id));
+        ui->courseTable->setItem(row, 7, new EleTableItem("双击添加到课表", course));
         row++;
     }
+    int rrowcnt = ui->courseTable->rowCount() - row;
+    for (int i = 0; i < rrowcnt; i++)
+        ui->courseTable->removeRow(row);
 }
 
 void CourseQueryPage::get_course_finished_fail(QString reason)
 {
     this->ui->progressBar->setValue(100);
-    this->ui->widget->setEnabled(true);
+    this->setEnabled(true);
     disconnect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);
     disconnect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     disconnect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
     QMessageBox::information(this, "Error", "Failed:" + reason);
 }
+
+void CourseQueryPage::on_courseTable_itemDoubleClicked(QTableWidgetItem *item)
+{
+    RefTableItem *ref_item{dynamic_cast<RefTableItem *>(item)};
+    if (ref_item) {
+        ref_item->exec();
+        return;
+    }
+    EleTableItem *ele_item{dynamic_cast<EleTableItem *>(item)};
+    if (ele_item) {
+        ele_item->exec();
+        return;
+    }
+}
+
+
+void CourseQueryPage::on_courseTable_itemClicked(QTableWidgetItem *item)
+{
+    ui->tableHintEdit->setText(item->text());
+}
+
