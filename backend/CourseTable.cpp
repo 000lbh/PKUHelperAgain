@@ -10,6 +10,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QMap>
+#include <QRegularExpression>
 
 QDataStream &operator<<(QDataStream &stream, const CourseTime &time)
 {
@@ -39,6 +40,27 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
             teachers.push_back({rawteachers.sliced(0, i), ""});
             rawteachers.remove(0, i + 4);
         }
+        QString raw_start_end_week = entry.value("qzz").toString();
+        QString raw_day_in_week = entry.value("sksj").toString();
+
+        time += "第" + raw_start_end_week.section('-', 0, 0) + "周到第" + raw_start_end_week.section('-', 1, 1) + "周:";
+
+        // 使用正则表达式提取每天的上课时间
+        QRegularExpression regex("<p>(.*?)\\(第(\\d+)节-第(\\d+)节\\)</p>");
+        QRegularExpressionMatchIterator it = regex.globalMatch(raw_day_in_week);
+        int dot_cnt = 0; // for processing ","
+        while (it.hasNext()) {
+            QRegularExpressionMatch match = it.next();
+            if (match.hasMatch()) {
+                if (dot_cnt) time += ",";
+                QString day = match.captured(1);
+                QString start = match.captured(2);
+                QString end = match.captured(3);
+                time += day + "(第" + start + "节-第" + end + "节)";
+                dot_cnt ++;
+            }
+        }
+
         // TODO: Need process qzz(start-stop week) and time
         remarks = entry.value("bz").toString();
     }

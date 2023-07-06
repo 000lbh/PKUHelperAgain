@@ -51,7 +51,7 @@ struct CourseEntry {
     int class_no;
     double credit; // Can be non-integer, such as 2.5
     QString execute_plan_id; // Internal use
-    QVector<CourseTime> time; // May have multiple time schedules
+    QString time; // May have multiple time schedules
     QVector<QPair<QString, QString>> teachers; // teacher name and its title
     QString remarks;
     QString grade;

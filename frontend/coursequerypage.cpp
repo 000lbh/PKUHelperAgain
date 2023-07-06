@@ -127,6 +127,7 @@ void CourseQueryPage::update_progressbar(int total, int current)
     this->ui->progressBar->setValue(int(current / double(total) * 100.));
 }
 
+/*
 QString get_course_time(QVector<CourseTime> ctime){
     if (ctime.empty()) return "无";
     QString week;
@@ -141,6 +142,7 @@ QString get_course_time(QVector<CourseTime> ctime){
     }
     return week + daytime;
 }
+*/
 
 void CourseQueryPage::get_course_finished_succ()
 {
@@ -170,6 +172,7 @@ void CourseQueryPage::get_course_finished_succ()
                 teacher += i + ',';
         teacher.chop(1);
         ui->courseTable->setItem(row, 4, new QTableWidgetItem(teacher));
+        ui->courseTable->setItem(row, 5, new QTableWidgetItem(course.time));
         ui->courseTable->setItem(row, 6, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + course.execute_plan_id));
         ui->courseTable->setItem(row, 7, new EleTableItem("双击添加到课表", course));
         row++;
