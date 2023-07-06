@@ -2,6 +2,7 @@
 #define GRADEQUERYPAGE_H
 
 #include <QDialog>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class GradeQueryPage;
@@ -19,6 +20,10 @@ public:
 private slots:
     void on_QueryGradeButton_clicked();
     void makeColor();
+
+    void on_GradeTable_itemDoubleClicked(QTableWidgetItem *item);
+
+    void on_scoreVisBox_clicked();
 
 private:
     Ui::GradeQueryPage *ui;

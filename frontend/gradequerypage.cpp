@@ -52,7 +52,7 @@ void GradeQueryPage::makeColor()
     ColorMethod method = getColorMethod();
     for (int i = 0; i < max_row; i++) {
         if (method == pf) {
-            QString rawgrade = ui->GradeTable->item(i, 4)->text();
+            QString rawgrade = dynamic_cast<GradeTableItem *>(ui->GradeTable->item(i, 4))->getGrade();
             bool ok;
             double grade{rawgrade.toDouble(&ok)};
             bool pass;
@@ -70,7 +70,7 @@ void GradeQueryPage::makeColor()
                     ui->GradeTable->item(i, j)->setBackground(QBrush{QColor{255, 40, 40}});
         }
         else if (method == lvl) {
-            QString rawgrade = ui->GradeTable->item(i, 4)->text();
+            QString rawgrade = dynamic_cast<GradeTableItem *>(ui->GradeTable->item(i, 4))->getGrade();
             bool ok;
             double grade{rawgrade.toDouble(&ok)};
             int gradelvl;
@@ -129,7 +129,7 @@ void GradeQueryPage::makeColor()
                 }
         }
         else if (method == th) {
-            QString rawgrade = ui->GradeTable->item(i, 4)->text();
+            QString rawgrade = dynamic_cast<GradeTableItem *>(ui->GradeTable->item(i, 4))->getGrade();
             bool ok;
             QColor color{};
             static QImage rainbow{":/rainbow.png", "png"};
@@ -214,7 +214,7 @@ void GradeQueryPage::on_QueryGradeButton_clicked()
             }
             ui->GradeTable->setItem(row, 2, new QTableWidgetItem(teacher));
             ui->GradeTable->setItem(row, 3, new QTableWidgetItem(QString::number(grade.credit)));
-            ui->GradeTable->setItem(row, 4, new QTableWidgetItem(grade.grade));
+            ui->GradeTable->setItem(row, 4, new GradeTableItem(grade.grade, ui->scoreVisBox->isChecked()));
             ui->GradeTable->setItem(row, 5, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + grade.execute_plan_id));
             row++;
         }
@@ -225,5 +225,30 @@ void GradeQueryPage::on_QueryGradeButton_clicked()
     makeColor();
     ui->GradeTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->AverageGpa->show();
+}
+
+
+void GradeQueryPage::on_GradeTable_itemDoubleClicked(QTableWidgetItem *item)
+{
+    RefTableItem *ref_item = dynamic_cast<RefTableItem *>(item);
+    if (ref_item) {
+        ref_item->exec();
+        return;
+    }
+    GradeTableItem *grade_item = dynamic_cast<GradeTableItem *>(item);
+    if (grade_item) {
+        grade_item->exec();
+        return;
+    }
+}
+
+
+void GradeQueryPage::on_scoreVisBox_clicked()
+{
+    const int max_row = ui->GradeTable->rowCount();
+    for (int i = 0; i < max_row; i++) {
+        dynamic_cast<GradeTableItem *>(ui->GradeTable->item(i, 4))->setVisibility(ui->scoreVisBox->isChecked());
+    }
+    return;
 }
 

@@ -95,7 +95,7 @@
     </property>
    </column>
   </widget>
-  <widget class="QCheckBox" name="checkBox">
+  <widget class="QCheckBox" name="refreshBox">
    <property name="geometry">
     <rect>
      <x>540</x>
@@ -143,6 +143,22 @@
    </property>
    <property name="text">
     <string>间隔：</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="scoreVisBox">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>70</y>
+     <width>271</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>成绩可见（双击可查看不可见成绩）</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QWidget" name="">
