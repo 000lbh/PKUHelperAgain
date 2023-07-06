@@ -94,6 +94,7 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
                                ";"}.arg(sems));
     qDebug() << CourseTableDB.lastError().text();
     QSqlQuery myqry(CourseTableDB);
+    CourseTableDB.transaction();
     for (const auto &i : courses) {
         QByteArray time;
         QByteArray teachers;
@@ -116,4 +117,5 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
         if (!myqry.exec())
             qDebug() << myqry.lastError().text();
     }
+    CourseTableDB.commit();
 }
