@@ -34,6 +34,14 @@ QList<CourseEntry> UnifiedDatabase::ct_query(QString sems, const QueryData &requ
     sems.replace("-", "_");
     sems.push_front("s");
     QSqlQuery myqry{CourseTableDB};
+    myqry.prepare("SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = ?");
+    myqry.addBindValue(sems);
+    myqry.exec();
+    if (!(myqry.next() && myqry.value(0).toInt())) {
+        if (errmsg)
+            *errmsg = "Please cache first!";
+        return {};
+    }
     if (request.id != QString{}) {
         myqry.prepare("SELECT * FROM " + sems + " WHERE id = ?;");
         myqry.addBindValue(request.id);
