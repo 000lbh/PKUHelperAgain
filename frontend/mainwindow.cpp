@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setCentralWidget(ui->mainVerticalWidget);
     connect(this, &MainWindow::logged_in, GradeQueryPage::get(this), &GradeQueryPage::logged_in);
     connect(this, &MainWindow::logged_in, CourseQueryPage::get(this), &CourseQueryPage::logged_in);
     connect(this, &MainWindow::logged_in, CourseManagePage::get(this), &CourseManagePage::logged_in);
@@ -23,11 +24,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_SettingsButton_clicked() // Settings & About
+void MainWindow::on_SettingsButton_clicked()
 {
-    AboutPage* about = AboutPage::get(this);
-    about->show();
-    about->setFocus();
+    // TODO
 }
 
 
@@ -74,5 +73,13 @@ void MainWindow::on_loginLabel_clicked()
         emit logged_in(IAAA::get_instance().get_username(), old_username, result == 1);
     }
     return;
+}
+
+
+void MainWindow::on_aboutLabel_clicked()
+{
+    AboutPage* about = AboutPage::get(this);
+    about->show();
+    about->setFocus();
 }
 

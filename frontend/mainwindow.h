@@ -29,6 +29,8 @@ private slots:
 
     void on_loginLabel_clicked();
 
+    void on_aboutLabel_clicked();
+
 private:
     Ui::MainWindow *ui;
 

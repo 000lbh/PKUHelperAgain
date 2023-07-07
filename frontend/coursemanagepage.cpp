@@ -20,7 +20,7 @@ public:
     }
 };
 
-std::map<QDate,std::vector<Arrangement> > calendar;
+QMap<QDate, QList<Arrangement> > calendar;
 // TODO: Use QSettings to save it globally
 CourseManagePage *CourseManagePage::the_only_instance = nullptr;
 
@@ -92,8 +92,8 @@ void CourseManagePage::on_Calendar_clicked(const QDate &date)
         QMessageBox::information(this, "提示", "当天没有日程");
     }
     else {
-        std::vector<Arrangement> arrangements = calendar[date];
-        std::sort(arrangements.begin(), arrangements.end(), [](const Arrangement& a1, const Arrangement& a2) {
+        QList<Arrangement> arrangements = calendar[date];
+        std::ranges::sort(arrangements, [](const Arrangement& a1, const Arrangement& a2) {
         return a1.datetime < a2.datetime;
         });
 
