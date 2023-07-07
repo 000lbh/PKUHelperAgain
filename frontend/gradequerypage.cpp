@@ -174,8 +174,12 @@ void GradeQueryPage::makeColor()
             }
         }
         else if (method == no) {
-            for (int j = 0; j < max_col; j++)
-                ui->GradeTable->item(i, j)->setBackground(QBrush{QColor{255, 255, 255}});
+            for (int j = 0; j < max_col; j++) {
+                if (i & 1)
+                    ui->GradeTable->item(i, j)->setBackground(QBrush{QColor{255, 255, 255}});
+                else
+                    ui->GradeTable->item(i, j)->setBackground(QBrush{QColor{224, 224, 224}});
+            }
         }
     }
     return;

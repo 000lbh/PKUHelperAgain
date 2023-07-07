@@ -128,7 +128,3 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
     CourseTableDB.commit();
 }
 
-bool UnifiedDatabase::user_connect(const QString &username, bool autocreate)
-{
-    return false;
-}

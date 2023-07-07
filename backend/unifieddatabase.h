@@ -17,7 +17,6 @@ class UnifiedDatabase : public QObject
     ~UnifiedDatabase();
     QSqlDatabase CourseTableDB;
     QSqlDatabase PersonCourseDB;
-    QSqlDatabase ScoreDB;
     QSqlDatabase DdlDB;
 public:
 
@@ -28,24 +27,9 @@ public:
     void ct_reset(QString sems, const QList<CourseEntry> &courses);
     void ct_merge();
 
-    // User manipulation
-
-    // User-specific db connect. All below need to execute this first
-    bool user_connect(const QString &username, bool autocreate = true);
-    void user_new(const QString &username);
-    void user_query(const QString &username);
-    // Note that password is to protect user's presonal data from leaking,
-    // instead of unauthorized removing. Operate this with caution and
-    // confirm, but not authentication.
-    void user_delete(const QString &username);
-
     // Score Sheet DB
-    void ss_add();
-    void ss_remove();
-    void ss_query();
-    void ss_reset();
-    void ss_merge();
-    void ss_diff();
+    QMap<QString, QList<CourseEntry>> ss_get();
+    void ss_reset(const QMap<QString, QList<CourseEntry>> &courses);
 
     // Personal Course DB
     void pc_query();
