@@ -52,6 +52,7 @@ struct CourseEntry {
     double credit; // Can be non-integer, such as 2.5
     QString execute_plan_id; // Internal use
     QString time; // May have multiple time schedules
+    QList<CourseTime> times;
     QVector<QPair<QString, QString>> teachers; // teacher name and its title
     QString remarks;
     QString grade;
@@ -68,6 +69,9 @@ struct CourseEntry {
 
     bool is_same(const CourseEntry &other) const;
     bool operator==(const CourseEntry &other) const ;
+
+    friend QDataStream &operator<<(QDataStream &stream, const CourseEntry &entry);
+    friend QDataStream &operator>>(QDataStream &stream, CourseEntry &entry);
 };
 
 struct QueryData {

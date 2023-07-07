@@ -28,6 +28,11 @@ CourseQueryPage *CourseQueryPage::get(QWidget *parent) {
     return the_only_instance;
 }
 
+void CourseQueryPage::logged_in(QString username, QString oldname, bool online)
+{
+    return;
+}
+
 void CourseQueryPage::on_updateButton_clicked()
 {
     connect(&courses, &CourseTable::ready, this, &CourseQueryPage::get_course_finished_succ);

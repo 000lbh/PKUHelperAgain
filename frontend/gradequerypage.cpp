@@ -3,6 +3,7 @@
 #include "backend/CourseTable.hpp"
 #include "backend/scoresheet.h"
 #include "backend/pkuportal.h"
+#include "backend/unifieddatabase.h"
 #include "tableitem.h"
 #include <QMessageBox>
 
@@ -34,6 +35,22 @@ GradeQueryPage::~GradeQueryPage()
 {
     delete ui;
     the_only_instance = nullptr;
+    if (next_scores)
+        delete next_scores;
+    if (cur_scores) {
+        UnifiedDatabase::getInstance().ss_reset(IAAA::get_instance().get_username(), cur_scores->get_gradelist(), cur_scores->get_gpa());
+        delete cur_scores;
+    }
+}
+
+void GradeQueryPage::logged_in(QString username, QString oldname, bool online)
+{
+    if (oldname != QString{})
+        UnifiedDatabase::getInstance().ss_reset(oldname, cur_scores->get_gradelist(), cur_scores->get_gpa());
+    if (!cur_scores)
+        cur_scores = new ScoreSheet{};
+    cur_scores->get_gradelist() = UnifiedDatabase::getInstance().ss_get(username, &cur_scores->get_gpa());
+    updateDisplay();
 }
 
 GradeQueryPage::ColorMethod GradeQueryPage::getColorMethod()
@@ -187,6 +204,8 @@ void GradeQueryPage::makeColor()
 
 void GradeQueryPage::on_QueryGradeButton_clicked()
 {
+    if (next_scores)
+        delete next_scores;
     next_scores = new ScoreSheet{};
     ui->QueryGradeButton->setEnabled(false);
     connect(next_scores, &ScoreSheet::finished, this, &GradeQueryPage::updateGrade);
@@ -210,6 +229,10 @@ void GradeQueryPage::updateGrade(bool success, QString reason) {
     }
     cur_scores = next_scores;
     next_scores = nullptr;
+    updateDisplay();
+}
+
+void GradeQueryPage::updateDisplay() {
     ui->AverageGpa->setText(QString::asprintf("综合GPA：%.3lf", cur_scores->get_gpa()));
     int row = 0;
     for(const auto &[sems, lists] : cur_scores->get_gradelist_const().toStdMap()) {

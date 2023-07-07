@@ -28,8 +28,8 @@ public:
     void ct_merge();
 
     // Score Sheet DB
-    QMap<QString, QList<CourseEntry>> ss_get();
-    void ss_reset(const QMap<QString, QList<CourseEntry>> &courses);
+    QMap<QString, QList<CourseEntry>> ss_get(const QString &username, double *gpa = nullptr, QString *errmsg = nullptr);
+    void ss_reset(const QString &username, const QMap<QString, QList<CourseEntry>> &courses, double gpa = 0., QString *errmsg = nullptr);
 
     // Personal Course DB
     void pc_query();

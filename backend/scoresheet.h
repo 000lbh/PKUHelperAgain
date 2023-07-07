@@ -17,7 +17,9 @@ public:
     explicit ScoreSheet(QObject *parent = nullptr);
     QList<QString> get_available_sems() const;
     void online_get(PKUPortal &portal);
-    double get_gpa() const;
+    const double &get_gpa() const;
+    double &get_gpa();
+    double get_gpa_const() const;
     //QList<std::pair<QString, double>> get_gpas() const;
     void merge(const ScoreSheet &other);
     void diff(QList<CourseEntry> *added, QList<CourseEntry> *deleted, const ScoreSheet &other) const;

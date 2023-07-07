@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(this, &MainWindow::logged_in, GradeQueryPage::get(this), &GradeQueryPage::logged_in);
+    connect(this, &MainWindow::logged_in, CourseQueryPage::get(this), &CourseQueryPage::logged_in);
+    connect(this, &MainWindow::logged_in, CourseManagePage::get(this), &CourseManagePage::logged_in);
 }
 
 MainWindow::~MainWindow()
@@ -65,8 +68,11 @@ void MainWindow::on_loginLabel_clicked()
 {
     LoginDialog dialog(this);
     int result;
-    if ((result = dialog.exec()))
+    QString old_username = IAAA::get_instance().get_username();
+    if ((result = dialog.exec())) {
         ui->loginLabel->setText("Logged in as " + IAAA::get_instance().get_username() + (result == 1 ? "(online)" : "(offline)"));
+        emit logged_in(IAAA::get_instance().get_username(), old_username, result == 1);
+    }
     return;
 }
 

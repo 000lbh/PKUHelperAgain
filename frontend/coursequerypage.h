@@ -20,6 +20,9 @@ public:
     ~CourseQueryPage();
     static CourseQueryPage *get(QWidget *parent = nullptr);
 
+public slots:
+    void logged_in(QString username, QString oldname, bool online);
+
 private slots:
     void on_updateButton_clicked();
     void on_queryButton_clicked();

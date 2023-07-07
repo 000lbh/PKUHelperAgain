@@ -93,6 +93,44 @@ bool CourseEntry::operator==(const CourseEntry &other) const {
     return execute_plan_id == other.execute_plan_id;
 }
 
+QDataStream &operator<<(QDataStream &stream, const CourseEntry &entry)
+{
+     return stream <<
+            entry.id <<
+            entry.course_name <<
+            entry.eng_name <<
+            entry.type_name <<
+            entry.college_name <<
+            entry.class_no <<
+            entry.credit <<
+            entry.execute_plan_id <<
+            entry.time <<
+            entry.times <<
+            entry.teachers <<
+            entry.remarks <<
+            entry.grade <<
+            entry.grade_point;
+}
+
+QDataStream &operator>>(QDataStream &stream, CourseEntry &entry)
+{
+     return stream >>
+            entry.id >>
+            entry.course_name >>
+            entry.eng_name >>
+            entry.type_name >>
+            entry.college_name >>
+            entry.class_no >>
+            entry.credit >>
+            entry.execute_plan_id >>
+            entry.time >>
+            entry.times >>
+            entry.teachers >>
+            entry.remarks >>
+            entry.grade >>
+            entry.grade_point;
+}
+
 CourseTable::CourseTable(QObject *parent)
     : QObject{parent}
     , available{true}

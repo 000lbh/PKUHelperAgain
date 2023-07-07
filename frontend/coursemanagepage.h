@@ -16,6 +16,9 @@ public:
     ~CourseManagePage();
     static CourseManagePage *get(QWidget *parent = nullptr);
 
+public slots:
+    void logged_in(QString username, QString oldname, bool online);
+
 private slots:
     void on_AddArrangement_clicked();
 

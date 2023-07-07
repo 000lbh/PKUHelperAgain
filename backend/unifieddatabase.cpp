@@ -2,6 +2,8 @@
 #include <QDataStream>
 #include <QByteArray>
 #include <QSqlError>
+#include <QFile>
+#include <QDir>
 
 #include "unifieddatabase.h"
 
@@ -126,5 +128,43 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
             qDebug() << myqry.lastError().text();
     }
     CourseTableDB.commit();
+}
+
+QMap<QString, QList<CourseEntry>> UnifiedDatabase::ss_get(const QString &username, double *gpa, QString *errmsg)
+{
+    QDir ss_dir{username};
+    if (!ss_dir.exists())
+        ss_dir.mkpath(".");
+    QFile ss_file{username + "/course.dat"};
+    if (!ss_file.open(QFile::ReadOnly | QFile::ExistingOnly)) {
+        if (errmsg)
+            *errmsg = ss_file.errorString();
+        *gpa = 0.;
+        return {};
+    }
+    QDataStream ss_stream{&ss_file};
+    QMap<QString, QList<CourseEntry>> result;
+    ss_stream >> result;
+    if (gpa)
+        ss_stream >> *gpa;
+    ss_file.close();
+    return result;
+}
+
+void UnifiedDatabase::ss_reset(const QString &username, const QMap<QString, QList<CourseEntry>> &courses, double gpa, QString *errmsg)
+{
+    QDir ss_dir{username};
+    if (!ss_dir.exists())
+        ss_dir.mkpath(".");
+    QFile ss_file{username + "/course.dat"};
+    if (!ss_file.open(QFile::WriteOnly | QFile::Truncate)) {
+        if (errmsg)
+            *errmsg = ss_file.errorString();
+        return;
+    }
+    QDataStream ss_stream{&ss_file};
+    ss_stream << courses << gpa;
+    ss_file.close();
+    return;
 }
 

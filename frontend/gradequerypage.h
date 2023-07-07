@@ -24,9 +24,11 @@ public:
 
 public slots:
     void on_QueryGradeButton_clicked();
+    void logged_in(QString username, QString oldname, bool online);
 
 private slots:
     void makeColor();
+    void updateDisplay();
     void updateGrade(bool success, QString reason);
     void on_GradeTable_itemDoubleClicked(QTableWidgetItem *item);
     void on_scoreVisBox_clicked();

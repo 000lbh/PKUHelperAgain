@@ -28,7 +28,17 @@ void ScoreSheet::online_get(PKUPortal &portal)
     portal.qnam.get(myreq);
 }
 
-double ScoreSheet::get_gpa() const
+const double &ScoreSheet::get_gpa() const
+{
+    return gpa;
+}
+
+double &ScoreSheet::get_gpa()
+{
+    return gpa;
+}
+
+double ScoreSheet::get_gpa_const() const
 {
     return gpa;
 }

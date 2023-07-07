@@ -31,5 +31,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+signals:
+    void logged_in(QString username, QString oldname, bool online);
 };
 #endif // MAINWINDOW_H

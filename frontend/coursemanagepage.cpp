@@ -43,6 +43,11 @@ CourseManagePage *CourseManagePage::get(QWidget *parent) {
     return the_only_instance;
 }
 
+void CourseManagePage::logged_in(QString username, QString oldname, bool online)
+{
+    return;
+}
+
 void CourseManagePage::on_AddArrangement_clicked()
 {
     QDialog* dialog = new QDialog(this);

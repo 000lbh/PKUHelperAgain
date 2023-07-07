@@ -164,7 +164,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>630</x>
@@ -176,6 +176,9 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QRadioButton" name="noColorBtn">
+      <property name="toolTip">
+       <string>不染色（隔行加灰）</string>
+      </property>
       <property name="text">
        <string>不染色</string>
       </property>
@@ -186,6 +189,9 @@
     </item>
     <item>
      <widget class="QRadioButton" name="pfColorBtn">
+      <property name="toolTip">
+       <string>取得学分的课为绿色，其他为红色</string>
+      </property>
       <property name="text">
        <string>PF染色</string>
       </property>
@@ -193,6 +199,9 @@
     </item>
     <item>
      <widget class="QRadioButton" name="lvlColorBtn">
+      <property name="toolTip">
+       <string>85+（A类）为绿色，75+（B类）为黄色，65+（C类）为橙色，60+（D类）为红色，不及格为紫红色，其他不染色</string>
+      </property>
       <property name="text">
        <string>等级染色</string>
       </property>
@@ -200,6 +209,9 @@
     </item>
     <item>
      <widget class="QRadioButton" name="thColorBtn">
+      <property name="toolTip">
+       <string>如同树洞成绩查询那样的染色</string>
+      </property>
       <property name="text">
        <string>树洞染色</string>
       </property>
