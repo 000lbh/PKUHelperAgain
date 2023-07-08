@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,6 +17,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private slots:
 
@@ -33,6 +39,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QSystemTrayIcon tray;
+    QMenu traymenu;
 
 signals:
     void logged_in(QString username, QString oldname, bool online);

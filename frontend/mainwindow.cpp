@@ -7,6 +7,7 @@
 #include "gradequerypage.h"
 
 #include <QMessageBox>
+#include <QCoreApplication>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,11 +18,36 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::logged_in, GradeQueryPage::get(this), &GradeQueryPage::logged_in);
     connect(this, &MainWindow::logged_in, CourseQueryPage::get(this), &CourseQueryPage::logged_in);
     connect(this, &MainWindow::logged_in, CourseManagePage::get(this), &CourseManagePage::logged_in);
+    QAction *window_show = new QAction{"显示"};
+    connect(window_show, &QAction::triggered, this, &MainWindow::show);
+    traymenu.addAction(window_show);
+    QAction *app_exit = new QAction{"退出"};
+    connect(app_exit, &QAction::triggered, QCoreApplication::instance(), &QCoreApplication::quit);
+    traymenu.addAction(app_exit);
+    tray.setIcon(QIcon{":/favicon.png"});
+    tray.setContextMenu(&traymenu);
+    if (tray.isSystemTrayAvailable())
+        tray.show();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (!event->spontaneous() || !this->isVisible()) {
+        QCoreApplication::instance()->quit();
+    }
+    if (tray.isVisible()) {
+        hide();
+        event->ignore();
+        tray.showMessage("提醒", "软件已经最小化到托盘，右键托盘图标可还原或退出");
+    }
+    else {
+        QCoreApplication::instance()->quit();
+    }
 }
 
 void MainWindow::on_SettingsButton_clicked()
