@@ -38,6 +38,8 @@ private slots:
 
     void on_refreshBox_stateChanged(int arg1);
 
+    void on_GradeTable_itemClicked(QTableWidgetItem *item);
+
 private:
     Ui::GradeQueryPage *ui;
     enum ColorMethod {no, pf, th, lvl};

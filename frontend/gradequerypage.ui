@@ -219,6 +219,19 @@
     </item>
    </layout>
   </widget>
+  <widget class="QLineEdit" name="infoEdit">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>480</y>
+     <width>541</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="../res.qrc"/>

@@ -260,7 +260,8 @@ void GradeQueryPage::updateDisplay() {
                 else
                     teacher += name + '(' + level + ')' + ',';
             }
-            ui->GradeTable->setItem(row, 2, new QTableWidgetItem(teacher));
+            teacher.chop(1);
+            ui->GradeTable->setItem(row, 2, new QTableWidgetItem(std::move(teacher)));
             ui->GradeTable->setItem(row, 3, new QTableWidgetItem(QString::number(grade.credit)));
             ui->GradeTable->setItem(row, 4, new GradeTableItem(grade.grade, ui->scoreVisBox->isChecked()));
             ui->GradeTable->setItem(row, 5, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + grade.execute_plan_id));
@@ -311,5 +312,11 @@ void GradeQueryPage::on_refreshBox_stateChanged(int arg1)
     else {
         timer.stop();
     }
+}
+
+
+void GradeQueryPage::on_GradeTable_itemClicked(QTableWidgetItem *item)
+{
+    ui->infoEdit->setText(item->text());
 }
 
