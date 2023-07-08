@@ -6,6 +6,7 @@
 #include "backend/unifieddatabase.h"
 #include "items.h"
 #include <QMessageBox>
+#include <QSettings>
 
 GradeQueryPage *GradeQueryPage::the_only_instance = nullptr;
 
@@ -14,6 +15,7 @@ GradeQueryPage::GradeQueryPage(QWidget *parent) :
     cur_scores{nullptr},
     next_scores{nullptr},
     timer{this},
+    tray{nullptr},
     ui(new Ui::GradeQueryPage)
 {
     ui->setupUi(this);
@@ -23,6 +25,7 @@ GradeQueryPage::GradeQueryPage(QWidget *parent) :
     connect(ui->thColorBtn, &QRadioButton::clicked, this, &GradeQueryPage::makeColor);
     connect(ui->pfColorBtn, &QRadioButton::clicked, this, &GradeQueryPage::makeColor);
     timer.callOnTimeout(this, &GradeQueryPage::on_QueryGradeButton_clicked);
+    ui->scoreVisBox->setChecked(QSettings{}.value("showScore", true).toBool());
 }
 
 GradeQueryPage *GradeQueryPage::get(QWidget *parent) {
@@ -41,6 +44,11 @@ GradeQueryPage::~GradeQueryPage()
         UnifiedDatabase::getInstance().ss_reset(IAAA::get_instance().get_username(), cur_scores->get_gradelist(), cur_scores->get_gpa());
         delete cur_scores;
     }
+}
+
+void GradeQueryPage::setTray(QSystemTrayIcon *tray)
+{
+    this->tray = tray;
 }
 
 void GradeQueryPage::logged_in(QString username, QString oldname, bool online)
@@ -223,7 +231,10 @@ void GradeQueryPage::updateGrade(bool success, QString reason) {
         QList<CourseEntry> add{}, deleted{};
         cur_scores->diff(&add, &deleted, *next_scores);
         if (add.size() != 0 || deleted.size() != 0) {
-            QMessageBox::information(this, "Score Update", QString::asprintf("You have %d course(s) added and %d course(s) deleted", add.size(), deleted.size()));
+            if (tray && !isVisible())
+                tray->showMessage("成绩更新", QString{"你新增了%1门成绩，撤回了%2门成绩"}.arg(add.size(), deleted.size()));
+            else
+                QMessageBox::information(this, "Score Update", QString::asprintf("You have %d course(s) added and %d course(s) deleted", add.size(), deleted.size()));
         }
         delete cur_scores;
     }
@@ -282,6 +293,7 @@ void GradeQueryPage::on_GradeTable_itemDoubleClicked(QTableWidgetItem *item)
 
 void GradeQueryPage::on_scoreVisBox_clicked()
 {
+    QSettings{}.setValue("showScore", ui->scoreVisBox->isChecked());
     const int max_row = ui->GradeTable->rowCount();
     for (int i = 0; i < max_row; i++) {
         dynamic_cast<GradeTableItem *>(ui->GradeTable->item(i, 4))->setVisibility(ui->scoreVisBox->isChecked());

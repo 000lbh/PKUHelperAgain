@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QTableWidgetItem>
 #include <QTimer>
+#include <QSystemTrayIcon>
 
 #include "backend/scoresheet.h"
 
@@ -18,9 +19,11 @@ class GradeQueryPage : public QDialog
     static GradeQueryPage *the_only_instance;
     ScoreSheet *cur_scores, *next_scores;
     QTimer timer;
+    QSystemTrayIcon *tray;
 public:
     ~GradeQueryPage();
     static GradeQueryPage *get(QWidget *parent = nullptr);
+    void setTray(QSystemTrayIcon *tray);
 
 public slots:
     void on_QueryGradeButton_clicked();

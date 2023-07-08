@@ -30,6 +30,10 @@ MainWindow::MainWindow(QWidget *parent)
     tray.setContextMenu(&traymenu);
     if (tray.isSystemTrayAvailable())
         tray.show();
+    GradeQueryPage::get(this)->setTray(&tray);
+    auto &&args = QApplication::arguments();
+    if (args.size() >= 2 && args[1] == "--hide")
+        tray.showMessage("提示", "应用以最小化模式启动。如果你需要成绩查询，请打开主界面并登录。出于安全原因，不提供自动登录。");
 }
 
 MainWindow::~MainWindow()
@@ -39,13 +43,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (!event->spontaneous() || !this->isVisible()) {
+    if (QSettings{}.value("directClose", false).toBool() || !event->spontaneous() || !this->isVisible()) {
         QCoreApplication::instance()->quit();
+        return;
     }
     if (tray.isVisible()) {
         hide();
         event->ignore();
-        tray.showMessage("提醒", "软件已经最小化到托盘，右键托盘图标可还原或退出");
+        tray.showMessage("提醒", "软件已经最小化到托盘，右键托盘图标可还原或退出。你可以在设置中更改默认行为。");
     }
     else {
         QCoreApplication::instance()->quit();
