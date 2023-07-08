@@ -1,5 +1,7 @@
 #include "coursemanagepage.h"
 #include "ui_coursemanagepage.h"
+#include "items.h"
+#include "backend/unifieddatabase.h"
 
 #include <qdialog.h>
 #include <QMessageBox>
@@ -10,31 +12,28 @@
 #include <QComboBox>
 #include <QVBoxLayout>
 
-class Arrangement{
-public:
-    QString title;
-    QString content;
-    QDateTime datetime;
-    Arrangement(QString _title, QString _content, QDateTime _datetime)
-        : title(_title), content(_content), datetime(_datetime) {
-    }
-};
-
-QMap<QDate, QList<Arrangement> > calendar;
-// TODO: Use QSettings to save it globally
 CourseManagePage *CourseManagePage::the_only_instance = nullptr;
+QMap<QDate, QList<Arrangement>> CourseManagePage::calendar{};
+QMap<QString, QList<CourseEntry>> CourseManagePage::courses{};
 
 CourseManagePage::CourseManagePage(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CourseManagePage)
 {
     ui->setupUi(this);
+    connect(ui->semsBox, &QComboBox::currentIndexChanged, this, &CourseManagePage::updateCourses);
 }
 
 CourseManagePage::~CourseManagePage()
 {
     delete ui;
     the_only_instance = nullptr;
+    auto username = IAAA::get_instance().get_username();
+    auto &dbInstance = UnifiedDatabase::getInstance();
+    if (IAAA::get_instance().get_username() != QString{}) {
+        dbInstance.pc_reset(username, courses);
+        dbInstance.ddl_reset(username, calendar);
+    }
 }
 
 CourseManagePage *CourseManagePage::get(QWidget *parent) {
@@ -45,7 +44,24 @@ CourseManagePage *CourseManagePage::get(QWidget *parent) {
 
 void CourseManagePage::logged_in(QString username, QString oldname, bool online)
 {
+    auto &dbInstance = UnifiedDatabase::getInstance();
+    if (oldname != QString{}) {
+        dbInstance.pc_reset(oldname, courses);
+        dbInstance.ddl_reset(oldname, calendar);
+    }
+    courses = dbInstance.pc_get(username);
+    calendar = dbInstance.ddl_get(username);
     return;
+}
+
+void CourseManagePage::updateCourses()
+{
+    while (ui->courseListWidget->count()) {
+        delete ui->courseListWidget->takeItem(0);
+    }
+    for (auto &i : courses[ui->semsBox->currentText()]) {
+        ui->courseListWidget->addItem(new CourseListItem(i));
+    }
 }
 
 void CourseManagePage::on_AddArrangement_clicked()
@@ -108,5 +124,22 @@ void CourseManagePage::on_Calendar_clicked(const QDate &date)
 
         QMessageBox::information(this, "当天日程", content);
     }
+}
+
+
+void CourseManagePage::on_removeButton_clicked()
+{
+    if (!ui->courseListWidget->count())
+        return;
+    int row = ui->courseListWidget->currentRow();
+    courses[ui->semsBox->currentText()].remove(row);
+    updateCourses();
+}
+
+
+void CourseManagePage::on_courseListWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    dynamic_cast<CourseListItem *>(item)->exec();
+    return;
 }
 

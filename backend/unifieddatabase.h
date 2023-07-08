@@ -8,6 +8,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include "CourseTable.hpp"
+#include "frontend/coursemanagepage.h"
 
 
 class UnifiedDatabase : public QObject
@@ -32,19 +33,12 @@ public:
     void ss_reset(const QString &username, const QMap<QString, QList<CourseEntry>> &courses, double gpa = 0., QString *errmsg = nullptr);
 
     // Personal Course DB
-    void pc_query();
-    void pc_reset();
-    void pc_merge();
-    void pc_diff();
-    void pc_add();
-    void pc_remove();
+    QMap<QString, QList<CourseEntry>> pc_get(const QString &username, QString *errmsg = nullptr);
+    void pc_reset(const QString &username, const QMap<QString, QList<CourseEntry>> &data, QString *errmsg = nullptr);
 
     // Personal DDL DB
-    void ddl_add();
-    void ddl_query();
-    void ddl_remove();
-    void ddl_reset();
-    void ddl_merge();
+    QMap<QDate, QList<Arrangement>> ddl_get(const QString &username, QString *errmsg = nullptr);
+    void ddl_reset(const QString &username, const QMap<QDate, QList<Arrangement>> &data, QString *errmsg = nullptr);
 
 signals:
 

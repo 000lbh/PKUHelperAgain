@@ -15,10 +15,12 @@ SOURCES += \
     backend/unifieddatabase.cpp \
     frontend/aboutpage.cpp \
     frontend/clickablelabel.cpp \
+    frontend/courseinfoeditdlg.cpp \
     frontend/coursemanagepage.cpp \
     frontend/coursequerypage.cpp \
     frontend/gradequerypage.cpp \
     frontend/logindialog.cpp \
+    frontend/settingsdialog.cpp \
     main.cpp \
     frontend/mainwindow.cpp \
     backend/CourseTable.cpp
@@ -30,21 +32,25 @@ HEADERS += \
     backend/unifieddatabase.h \
     frontend/aboutpage.h \
     frontend/clickablelabel.h \
+    frontend/courseinfoeditdlg.h \
     frontend/coursemanagepage.h \
     frontend/coursequerypage.h \
     frontend/gradequerypage.h \
+    frontend/items.h \
     frontend/logindialog.h \
     frontend/mainwindow.h \
     backend/CourseTable.hpp \
-    frontend/tableitem.h
+    frontend/settingsdialog.h
 
 FORMS += \
     frontend/aboutpage.ui \
+    frontend/courseinfoeditdlg.ui \
     frontend/coursemanagepage.ui \
     frontend/coursequerypage.ui \
     frontend/gradequerypage.ui \
     frontend/logindialog.ui \
-    frontend/mainwindow.ui
+    frontend/mainwindow.ui \
+    frontend/settingsdialog.ui
 
 # ICON
 # RC_ICONS = favicon.png

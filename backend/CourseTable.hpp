@@ -57,6 +57,8 @@ struct CourseEntry {
     QString remarks;
     QString grade;
     double grade_point;
+    QString sems;
+    QString location;
 
     enum JsonSource {
         Dean,

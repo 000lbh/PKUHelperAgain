@@ -198,10 +198,120 @@
      <widget class="QLineEdit" name="jsmcEdit"/>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="xndxqEdit">
-      <property name="placeholderText">
-       <string notr="true">22-23-2</string>
+     <widget class="QComboBox" name="xndxqEdit">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>70</y>
+        <width>91</width>
+        <height>25</height>
+       </rect>
       </property>
+      <item>
+       <property name="text">
+        <string>23-24-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>23-24-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>23-24-1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>22-23-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>22-23-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>22-23-1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>21-22-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>21-22-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>21-22-1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>20-21-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>20-21-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>20-21-1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>19-20-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>19-20-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>19-20-1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>18-19-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>18-19-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>18-19-1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>17-18-3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>17-18-2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>17-18-1</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item row="1" column="2">

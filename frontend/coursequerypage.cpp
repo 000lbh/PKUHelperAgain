@@ -2,7 +2,7 @@
 
 #include "coursequerypage.h"
 #include "ui_coursequerypage.h"
-#include "tableitem.h"
+#include "items.h"
 #include "backend/unifieddatabase.h"
 #include "backend/CourseTable.hpp"
 #include "backend/iaaa.h"
@@ -39,7 +39,7 @@ void CourseQueryPage::on_updateButton_clicked()
     connect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     connect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
     this->setEnabled(false);
-    courses.online_get({"", "", ui->xndxqEdit->text(), "0", "0", 0});
+    courses.online_get({"", "", ui->xndxqEdit->currentText(), "0", "0", 0});
     return;
 }
 
@@ -49,14 +49,14 @@ void CourseQueryPage::on_queryButton_clicked()
     QueryData request{
         ui->kcmcEdit->text(),
         ui->jsmcEdit->text(),
-        ui->xndxqEdit->text(),
+        ui->xndxqEdit->currentText(),
         "0",
         "0",
         ui->remarkEdit->text(),
         ui->kchEdit->text(),
         0
     };
-    QList<CourseEntry> courses{UnifiedDatabase::getInstance().ct_query(ui->xndxqEdit->text(), request, &errmsg)};
+    QList<CourseEntry> courses{UnifiedDatabase::getInstance().ct_query(ui->xndxqEdit->currentText(), request, &errmsg)};
     if (errmsg != QString{}) {
         QMessageBox::critical(this, "Error", errmsg);
         return;
@@ -78,8 +78,11 @@ void CourseQueryPage::on_queryButton_clicked()
                 teacher += i + ',';
         teacher.chop(1);
         ui->courseTable->setItem(row, 4, new QTableWidgetItem(teacher));
+        ui->courseTable->setItem(row, 5, new QTableWidgetItem(course.time));
         ui->courseTable->setItem(row, 6, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + course.execute_plan_id));
-        ui->courseTable->setItem(row, 7, new EleTableItem("双击添加到课表", course));
+        auto course1 = course;
+        course1.sems = ui->xndxqEdit->currentText();
+        ui->courseTable->setItem(row, 7, new EleTableItem("双击添加到课表", std::move(course1)));
         row++;
     }
     int rrowcnt = ui->courseTable->rowCount() - row;

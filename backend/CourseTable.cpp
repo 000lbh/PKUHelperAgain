@@ -109,7 +109,8 @@ QDataStream &operator<<(QDataStream &stream, const CourseEntry &entry)
             entry.teachers <<
             entry.remarks <<
             entry.grade <<
-            entry.grade_point;
+            entry.grade_point <<
+            entry.location;
 }
 
 QDataStream &operator>>(QDataStream &stream, CourseEntry &entry)
@@ -128,7 +129,8 @@ QDataStream &operator>>(QDataStream &stream, CourseEntry &entry)
             entry.teachers >>
             entry.remarks >>
             entry.grade >>
-            entry.grade_point;
+            entry.grade_point >>
+            entry.location;
 }
 
 CourseTable::CourseTable(QObject *parent)

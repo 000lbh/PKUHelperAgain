@@ -1,8 +1,9 @@
 
-#ifndef TABLEITEM_H
-#define TABLEITEM_H
+#ifndef ITEMS_H
+#define ITEMS_H
 
 #include <QTableWidgetItem>
+#include <QListWidgetItem>
 #include <QMessageBox>
 #include <QDesktopServices>
 
@@ -10,6 +11,8 @@
 #include "backend/iaaa.h"
 #include "coursequerypage.h"
 #include "gradequerypage.h"
+#include "coursemanagepage.h"
+#include "courseinfoeditdlg.h"
 
 class RefTableItem final : public QTableWidgetItem
 {
@@ -34,8 +37,9 @@ class EleTableItem final : public QTableWidgetItem
 {
     CourseEntry course_info;
 public:
-    explicit EleTableItem(const QString &text, const CourseEntry &entry)
-        : QTableWidgetItem(text), course_info{entry}
+    template <typename T>
+    explicit EleTableItem(const QString &text, T &&entry)
+        : QTableWidgetItem(text), course_info{std::forward<T>(entry)}
     {
         QFont font = this->font();
         font.setUnderline(true);
@@ -46,8 +50,11 @@ public:
     void exec() {
         if (IAAA::get_instance().get_username() == QString{})
             QMessageBox::critical(CourseQueryPage::get(), "Error", "Please login (can be offline) first!");
-        else
-            QMessageBox::critical(CourseQueryPage::get(), "Error", "Not implemented yet!");
+        else {
+            CourseManagePage::courses[course_info.sems].push_back(course_info);
+            QMessageBox::information(CourseQueryPage::get(), "成功", "添加成功，请检查");
+            CourseManagePage::get()->updateCourses();
+        }
         return;
     }
 };
@@ -83,4 +90,18 @@ public:
     }
 };
 
-#endif // TABLEITEM_H
+class CourseListItem : public QListWidgetItem
+{
+    CourseEntry &entry;
+public:
+    explicit CourseListItem(CourseEntry &entry) : entry(entry) {
+        this->setText(entry.course_name);
+    }
+    void exec() {
+        CourseInfoEditDlg editdlg{entry, CourseManagePage::get()};
+        editdlg.exec();
+        return;
+    }
+};
+
+#endif // ITEMS_H

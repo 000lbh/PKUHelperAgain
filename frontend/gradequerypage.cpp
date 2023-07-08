@@ -4,7 +4,7 @@
 #include "backend/scoresheet.h"
 #include "backend/pkuportal.h"
 #include "backend/unifieddatabase.h"
-#include "tableitem.h"
+#include "items.h"
 #include <QMessageBox>
 
 GradeQueryPage *GradeQueryPage::the_only_instance = nullptr;

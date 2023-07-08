@@ -75,10 +75,11 @@ QList<CourseEntry> UnifiedDatabase::ct_query(QString sems, const QueryData &requ
         tmp.credit = myqry.value(6).toDouble();
         tmp.execute_plan_id = myqry.value(7).toString();
         time = myqry.value(8).toByteArray();
-        timedata >> tmp.time;
-        teachers = myqry.value(9).toByteArray();
+        timedata >> tmp.times;
+        tmp.time = myqry.value(9).toString();
+        teachers = myqry.value(10).toByteArray();
         teachersdata >> tmp.teachers;
-        tmp.remarks = myqry.value(10).toString();
+        tmp.remarks = myqry.value(11).toString();
         result.push_back(std::move(tmp));
     }
     return result;
@@ -99,6 +100,7 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
                                "credit          REAL,"
                                "execute_plan_id TEXT,"
                                "time            BLOB,"
+                               "time_str        TEXT,"
                                "teachers        BLOB,"
                                "remarks         TEXT)"
                                ";"}.arg(sems));
@@ -110,9 +112,9 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
         QByteArray teachers;
         QDataStream timedata(&time, QDataStream::WriteOnly);
         QDataStream teachersdata(&teachers, QDataStream::WriteOnly);
-        timedata << i.time;
+        timedata << i.times;
         teachersdata << i.teachers;
-        myqry.prepare(QString{"INSERT INTO %1 VALUES (?,?,?,?,?,?,?,?,?,?,?);"}.arg(sems));
+        myqry.prepare(QString{"INSERT INTO %1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"}.arg(sems));
         myqry.addBindValue(i.id);
         myqry.addBindValue(i.course_name);
         myqry.addBindValue(i.eng_name);
@@ -122,6 +124,7 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
         myqry.addBindValue(i.credit);
         myqry.addBindValue(i.execute_plan_id);
         myqry.addBindValue(time);
+        myqry.addBindValue(i.time);
         myqry.addBindValue(teachers);
         myqry.addBindValue(i.remarks);
         if (!myqry.exec())
@@ -135,7 +138,7 @@ QMap<QString, QList<CourseEntry>> UnifiedDatabase::ss_get(const QString &usernam
     QDir ss_dir{username};
     if (!ss_dir.exists())
         ss_dir.mkpath(".");
-    QFile ss_file{username + "/course.dat"};
+    QFile ss_file{username + "/score.dat"};
     if (!ss_file.open(QFile::ReadOnly | QFile::ExistingOnly)) {
         if (errmsg)
             *errmsg = ss_file.errorString();
@@ -156,7 +159,7 @@ void UnifiedDatabase::ss_reset(const QString &username, const QMap<QString, QLis
     QDir ss_dir{username};
     if (!ss_dir.exists())
         ss_dir.mkpath(".");
-    QFile ss_file{username + "/course.dat"};
+    QFile ss_file{username + "/score.dat"};
     if (!ss_file.open(QFile::WriteOnly | QFile::Truncate)) {
         if (errmsg)
             *errmsg = ss_file.errorString();
@@ -168,3 +171,72 @@ void UnifiedDatabase::ss_reset(const QString &username, const QMap<QString, QLis
     return;
 }
 
+QMap<QString, QList<CourseEntry>> UnifiedDatabase::pc_get(const QString &username, QString *errmsg)
+{
+    QDir pc_dir{username};
+    if (!pc_dir.exists())
+        pc_dir.mkpath(".");
+    QFile pc_file{username + "/course.dat"};
+    if (!pc_file.open(QFile::ReadOnly | QFile::ExistingOnly)) {
+        if (errmsg)
+            *errmsg = pc_file.errorString();
+        return {};
+    }
+    QDataStream pc_stream{&pc_file};
+    QMap<QString, QList<CourseEntry>> result;
+    pc_stream >> result;
+    pc_file.close();
+    return result;
+}
+
+void UnifiedDatabase::pc_reset(const QString &username, const QMap<QString, QList<CourseEntry>> &data, QString *errmsg)
+{
+    QDir pc_dir{username};
+    if (!pc_dir.exists())
+        pc_dir.mkpath(".");
+    QFile pc_file{username + "/course.dat"};
+    if (!pc_file.open(QFile::WriteOnly | QFile::Truncate)) {
+        if (errmsg)
+            *errmsg = pc_file.errorString();
+        return;
+    }
+    QDataStream pc_stream{&pc_file};
+    pc_stream << data;
+    pc_file.close();
+    return;
+}
+
+QMap<QDate, QList<Arrangement>> UnifiedDatabase::ddl_get(const QString &username, QString *errmsg)
+{
+    QDir ddl_dir{username};
+    if (!ddl_dir.exists())
+        ddl_dir.mkpath(".");
+    QFile ddl_file{username + "/ddl.dat"};
+    if (!ddl_file.open(QFile::ReadOnly | QFile::ExistingOnly)) {
+        if (errmsg)
+            *errmsg = ddl_file.errorString();
+        return {};
+    }
+    QDataStream ddl_stream{&ddl_file};
+    QMap<QDate, QList<Arrangement>> result;
+    ddl_stream >> result;
+    ddl_file.close();
+    return result;
+}
+
+void UnifiedDatabase::ddl_reset(const QString &username, const QMap<QDate, QList<Arrangement>> &data, QString *errmsg)
+{
+    QDir ddl_dir{username};
+    if (!ddl_dir.exists())
+        ddl_dir.mkpath(".");
+    QFile ddl_file{username + "/ddl.dat"};
+    if (!ddl_file.open(QFile::WriteOnly | QFile::Truncate)) {
+        if (errmsg)
+            *errmsg = ddl_file.errorString();
+        return;
+    }
+    QDataStream ddl_stream{&ddl_file};
+    ddl_stream << data;
+    ddl_file.close();
+    return;
+}

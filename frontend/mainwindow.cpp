@@ -5,9 +5,11 @@
 #include "coursequerypage.h"
 #include "coursemanagepage.h"
 #include "gradequerypage.h"
+#include "settingsdialog.h"
 
 #include <QMessageBox>
 #include <QCoreApplication>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -52,16 +54,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_SettingsButton_clicked()
 {
-    // TODO
+    SettingsDialog setdlg;
+    setdlg.exec();
 }
 
 
 void MainWindow::on_NoClearReplyButton_clicked()
 {
-    QMessageBox qiangjibox;
-    qiangjibox.setIcon(QMessageBox::Warning);
-    qiangjibox.setText("暂时不能给你明确的答复。每个人承担自己的风险！");
-    qiangjibox.exec();
+    QMessageBox::warning(this, "提醒", "明确答复已给，请自己衡量。");
 }
 
 
@@ -84,6 +84,10 @@ void MainWindow::on_GradeQueryButton_clicked()
 void MainWindow::on_CourseManageButton_clicked()
 {
     CourseManagePage* courseman = CourseManagePage::get(this);
+    if (IAAA::get_instance().get_username() == QString{}) {
+        QMessageBox::critical(this, "错误", "你还没有登录(可以离线登录)");
+        return;
+    }
     courseman->show();
     courseman->setFocus();
 }
