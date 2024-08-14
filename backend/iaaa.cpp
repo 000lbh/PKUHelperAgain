@@ -16,11 +16,11 @@ IAAA::IAAA(QObject *parent)
     , params{
           {"userName", ""},
           {"password", ""},
-          {"appid", "portal2017"},
+          {"appid", "portalPublicQuery"},
           {"otpCode", ""},
           {"smsCode", ""},
           {"randCode", ""},
-          {"redirUrl", "https://portal.pku.edu.cn/portal2017/ssoLogin.do"}
+          {"redirUrl", "https://portal.pku.edu.cn/publicQuery/ssoLogin.do?moduleID=myScore"}
       }
 {
 
@@ -35,11 +35,11 @@ IAAA::IAAA(const QString &username,
     , params{
           {"userName", username},
           {"password", password},
-          {"appid", "portal2017"},
+          {"appid", "portalPublicQuery"},
           {"otpCode", otpCode},
           {"smsCode", ""},
           {"randCode", ""},
-          {"redirUrl", "https://portal.pku.edu.cn/portal2017/ssoLogin.do"}
+          {"redirUrl", "https://portal.pku.edu.cn/publicQuery/ssoLogin.do?moduleID=myScore"}
       }
 {
     if (autologin)
