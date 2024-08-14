@@ -19,7 +19,8 @@ void ScoreSheet::online_get(PKUPortal &portal)
         return;
     }
     internalportal = &portal;
-    QNetworkRequest myreq{QUrl{"https://portal.pku.edu.cn/portal2017/bizcenter/score/retrScores.do"}};
+    QNetworkRequest myreq{QUrl{"https://portal.pku.edu.cn/publicQuery/ctrl/topic/myScore/retrScores.do"}};
+    myreq.setRawHeader("Host", "portal.pku.edu.cn");
     if (!portal.logged_in) {
         emit finished(false, "Not logged in");
         return;

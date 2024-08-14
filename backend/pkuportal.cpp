@@ -22,9 +22,9 @@ void PKUPortal::login(IAAA &iaaa)
     }
     QString token{iaaa.token};
     iaaa.token = QString();
-    QUrl portal_url{"https://portal.pku.edu.cn/portal2017/ssoLogin.do"};
+    QUrl portal_url{"https://portal.pku.edu.cn/publicQuery/ssoLogin.do"};
     QString rand = QString::asprintf("%.15lf", QRandomGenerator::global()->generateDouble());
-    portal_url.setQuery(IAAA::urlencode({{"_rand", rand}, {"token", token}}));
+    portal_url.setQuery(IAAA::urlencode({{"_rand", rand}, {"token", token}, {"moduleID", "myScore"}}));
     QNetworkRequest myreq{portal_url};
     myreq.setRawHeader("User-Agent", user_agent);
     myreq.setRawHeader("Host", "portal.pku.edu.cn");
