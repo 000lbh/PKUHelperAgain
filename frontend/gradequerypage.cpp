@@ -153,6 +153,7 @@ void GradeQueryPage::makeColor()
                     break;
                 case 4:
                     ui->GradeTable->item(i, j)->setBackground(QBrush{QColor{255, 0, 127}});
+                    break;
                 default:
                     ui->GradeTable->item(i, j)->setBackground(QBrush{QColor{255, 255, 255}});
                 }

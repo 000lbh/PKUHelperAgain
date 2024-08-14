@@ -63,9 +63,9 @@ QList<CourseEntry> UnifiedDatabase::ct_query(QString sems, const QueryData &requ
     while (myqry.next()) {
         CourseEntry tmp;
         QByteArray teachers;
-        QDataStream teachersdata(&teachers, QDataStream::ReadOnly);
+        QDataStream teachersdata(&teachers, QIODeviceBase::ReadOnly);
         QByteArray time;
-        QDataStream timedata(&time, QDataStream::ReadOnly);
+        QDataStream timedata(&time, QIODeviceBase::ReadOnly);
         tmp.id = myqry.value(0).toString();
         tmp.course_name = myqry.value(1).toString();
         tmp.eng_name = myqry.value(2).toString();
@@ -110,8 +110,8 @@ void UnifiedDatabase::ct_reset(QString sems, const QList<CourseEntry> &courses)
     for (const auto &i : courses) {
         QByteArray time;
         QByteArray teachers;
-        QDataStream timedata(&time, QDataStream::WriteOnly);
-        QDataStream teachersdata(&teachers, QDataStream::WriteOnly);
+        QDataStream timedata(&time, QIODeviceBase::WriteOnly);
+        QDataStream teachersdata(&teachers, QIODeviceBase::WriteOnly);
         timedata << i.times;
         teachersdata << i.teachers;
         myqry.prepare(QString{"INSERT INTO %1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"}.arg(sems));
