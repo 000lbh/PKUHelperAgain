@@ -157,9 +157,11 @@ void CourseTable::online_get(const QueryData &req) {
     if (list[1].toInt() - list[0].toInt() != 1)
         throw "error";
     switch (list[2].toInt()) {
-    case 1: // Fall through
-    case 2: // Fall through
-    case 3: // Fall through
+    case 1:
+        [[fallthrough]];
+    case 2:
+        [[fallthrough]];
+    case 3:
         break;
     default:
         throw "error";

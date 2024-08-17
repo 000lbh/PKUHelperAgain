@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include <QDateTime>
 
 #include "coursequerypage.h"
 #include "ui_coursequerypage.h"
@@ -13,7 +14,16 @@ CourseQueryPage::CourseQueryPage(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CourseQueryPage)
 {
+    const int current_year = QDateTime::currentDateTime().date().year();
     ui->setupUi(this);
+    QStringList xndxq_list;
+    for (int y = 13; current_year > 2013 && y <= current_year % 100; ++y) {
+        for (int s : {1, 2, 3}) {
+            xndxq_list.push_front(QString::asprintf("%d-%d-%d", y, y + 1, s));
+        }
+    }
+    ui->xndxqEdit->addItems(xndxq_list);
+    ui->xndxqEdit->setCurrentIndex(0);
 }
 
 CourseQueryPage::~CourseQueryPage()
@@ -39,7 +49,7 @@ void CourseQueryPage::on_updateButton_clicked()
     connect(&courses, &CourseTable::fail, this, &CourseQueryPage::get_course_finished_fail);
     connect(&courses, &CourseTable::progress_update, this, &CourseQueryPage::update_progressbar);
     this->setEnabled(false);
-    courses.online_get({"", "", ui->xndxqEdit->currentText(), "0", "0", 0});
+    courses.online_get({"", "", ui->xndxqEdit->currentText(), "0", "0", "", "", 0});
     return;
 }
 
