@@ -23,7 +23,9 @@ QDataStream &operator>>(QDataStream &stream, CourseTime &time)
 }
 
 CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
-    if (source == Dean) {
+    switch (source) {
+    case Dean:
+    {
         id = entry.value("kch").toString();
         class_no = entry.value("jxbh").toString().toInt();
         course_name = entry.value("kcmc").toString();
@@ -62,8 +64,10 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         }
 
         remarks = entry.value("bz").toString();
+        break;
     }
-    else if (source == Portal) {
+    case PortalUndergrad:
+    {
         id = entry["kch"].toString();
         class_no = entry["jxbh"].toString().toInt();
         course_name = entry["kcmc"].toString();
@@ -82,6 +86,47 @@ CourseEntry::CourseEntry(const QJsonObject &entry, JsonSource source) {
         grade_point = entry["jd"].toString().toDouble(&gp_ok);
         if (!gp_ok)
             grade_point = NAN;
+        break;
+    }
+    case PortalGrad:
+    {
+        id = entry["kch"].toString();
+        class_no = 0;
+        course_name = entry["kcmc"].toString();
+        eng_name = QString{};
+        type_name = QString{};
+        credit = entry["xf"].toString().toDouble();
+        execute_plan_id = QString{};
+        grade = entry["cj"].toString();
+        grade_point = [&]() -> double {
+            if (grade == "A+" || grade == "A")
+                return 4.0;
+            if (grade == "A-")
+                return 3.7;
+            if (grade == "B+")
+                return 3.3;
+            if (grade == "B")
+                return 3.0;
+            if (grade == "B-")
+                return 2.7;
+            if (grade == "C+")
+                return 2.3;
+            if (grade == "C")
+                return 2.0;
+            if (grade == "C-")
+                return 1.7;
+            if (grade == "D+")
+                return 1.3;
+            if (grade == "D")
+                return 1.0;
+            if (grade == "F")
+                return 0.0;
+            return NAN;
+        }();
+        break;
+    }
+    default:
+        assert(false);
     }
 }
 

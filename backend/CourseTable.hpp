@@ -62,7 +62,8 @@ struct CourseEntry {
 
     enum JsonSource {
         Dean,
-        Portal
+        PortalUndergrad,
+	PortalGrad,
     };
 
     CourseEntry() = default;

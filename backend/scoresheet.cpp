@@ -122,6 +122,7 @@ void ScoreSheet::network_finished(QNetworkReply *response)
     internalportal = nullptr;
     QJsonParseError jerror;
     QJsonDocument data = QJsonDocument::fromJson(response->readAll(), &jerror);
+    qDebug() << data;
     response->deleteLater();
     if (jerror.error != jerror.NoError) {
         emit finished(false, response->errorString());
@@ -137,14 +138,37 @@ void ScoreSheet::network_finished(QNetworkReply *response)
         return;
     }
     // Score adding...
-    QJsonArray scores = dataobj["cjxx"].toArray();
-    for (const auto &i : scores) {
-        QJsonObject iobj = i.toObject();
-        QJsonArray listobj = iobj["list"].toArray();
-        for (const auto &j : listobj) {
-            _gradelist[iobj["xnd"].toString() + "-" + iobj["xq"].toString()].push_back(CourseEntry{j.toObject(), CourseEntry::Portal});
+    QString stu_type = dataobj["xslb"].toString();
+    if (stu_type == "bks") {
+        QJsonArray scores = dataobj["cjxx"].toArray();
+        for (const auto &i : scores) {
+            QJsonObject iobj = i.toObject();
+            QJsonArray listobj = iobj["list"].toArray();
+            for (const auto &j : listobj) {
+                _gradelist[iobj["xnd"].toString() + "-" + iobj["xq"].toString()].push_back(CourseEntry{j.toObject(), CourseEntry::PortalUndergrad});
+            }
         }
+        gpa = dataobj["gpa"].toObject()["gpa"].toString().toDouble();
     }
-    gpa = dataobj["gpa"].toObject()["gpa"].toString().toDouble();
+    else if (stu_type == "yjs") {
+        QJsonArray scores = dataobj["scoreLists"].toArray();
+        int cnt = 0;
+        double totalgp = 0.0;
+        for (const auto &score : scores) {
+            QJsonObject scoreobj = score.toObject();
+            qDebug() << scoreobj;
+            _gradelist[scoreobj["xnd"].toString() + "-" + scoreobj["xq"].toString()].push_back(CourseEntry{scoreobj, CourseEntry::PortalGrad});
+            double grade_point = _gradelist[scoreobj["xnd"].toString() + "-" + scoreobj["xq"].toString()].back().grade_point;
+            if (grade_point == grade_point /* Not NaN */) {
+                cnt++;
+                totalgp += grade_point;
+            }
+        }
+        gpa = totalgp / cnt;
+    }
+    else {
+        emit finished(false, "Unrecognized student type");
+        return;
+    }
     emit finished(true, QString{});
 }
