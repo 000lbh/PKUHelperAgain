@@ -17,228 +17,240 @@
    <iconset resource="../res.qrc">
     <normaloff>:/favicon.png</normaloff>:/favicon.png</iconset>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>20</y>
-     <width>201</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>课表查询页面：</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="updateButton">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>180</y>
-     <width>93</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>更新缓存</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="rsult_overview">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>240</y>
-     <width>671</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QProgressBar" name="progressBar">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>220</y>
-     <width>231</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="value">
-    <number>0</number>
-   </property>
-  </widget>
-  <widget class="QTableWidget" name="courseTable">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>260</y>
-     <width>701</width>
-     <height>301</height>
-    </rect>
-   </property>
-   <property name="sizeAdjustPolicy">
-    <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
-   </property>
-   <property name="editTriggers">
-    <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-   </property>
-   <property name="alternatingRowColors">
-    <bool>true</bool>
-   </property>
-   <property name="selectionMode">
-    <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
-   </property>
-   <property name="columnCount">
-    <number>8</number>
-   </property>
-   <column>
-    <property name="text">
-     <string>课号</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>课程名</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>学院</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>学分</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>授课老师</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>上课时间</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>查看</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>添加到课表</string>
-    </property>
-   </column>
-  </widget>
-  <widget class="QPushButton" name="queryButton">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>180</y>
-     <width>93</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>查询</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>160</y>
-     <width>401</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>如果你填写了课程号，其他条件将被忽略</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>70</y>
-     <width>520</width>
-     <height>110</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>课表查询页面：</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="4">
+      <widget class="QLineEdit" name="kcmcEdit"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="kchEdit"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>课程号：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QComboBox" name="xndxqEdit">
+       <property name="currentText">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="remarkEdit"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>学年度学期：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>教师名称：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>备注：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>课程名称：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="5">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="4">
+      <widget class="QLineEdit" name="jsmcEdit"/>
+     </item>
+     <item row="3" column="1" colspan="4">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>如果你填写了课程号，其他条件将被忽略</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Policy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>80</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QPushButton" name="queryButton">
+         <property name="text">
+          <string>查询</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="updateButton">
+         <property name="text">
+          <string>更新缓存</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Policy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>80</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="rsult_overview">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="courseTable">
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+     </property>
+     <property name="columnCount">
+      <number>8</number>
+     </property>
+     <column>
       <property name="text">
-       <string>学年度学期：</string>
+       <string>课号</string>
       </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QLineEdit" name="kcmcEdit"/>
-    </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="label_3">
+     </column>
+     <column>
       <property name="text">
-       <string>课程名称：</string>
+       <string>课程名</string>
       </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_4">
+     </column>
+     <column>
       <property name="text">
-       <string>课程号：</string>
+       <string>学院</string>
       </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QLineEdit" name="jsmcEdit"/>
-    </item>
-    <item row="0" column="1">
-     <widget class="QComboBox" name="xndxqEdit">
-      <property name="currentText">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLabel" name="label_5">
+     </column>
+     <column>
       <property name="text">
-       <string>教师名称：</string>
+       <string>学分</string>
       </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="kchEdit"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_6">
+     </column>
+     <column>
       <property name="text">
-       <string>备注：</string>
+       <string>授课老师</string>
       </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="remarkEdit"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QLineEdit" name="tableHintEdit">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>570</y>
-     <width>701</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
+     </column>
+     <column>
+      <property name="text">
+       <string>上课时间</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>查看</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>添加到课表</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="tableHintEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="../res.qrc"/>
