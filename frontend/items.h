@@ -74,8 +74,12 @@ public:
         return;
     }
     void exec() {
-        if (!visibility)
-            QMessageBox::information(GradeQueryPage::get(), "Grade", "你的成绩是:" + grade);
+        if (!visibility) {
+            if (grade != QString{})
+                QMessageBox::information(GradeQueryPage::get(), "Grade", "你的成绩是:" + grade);
+            else
+                QMessageBox::information(GradeQueryPage::get(), "Grade", "你还没有取得这门课的成绩！");
+        }
         return;
     }
     QString getGrade() {

@@ -8,6 +8,8 @@
 ScoreSheet::ScoreSheet(QObject *parent)
     : QObject{parent}
     , internalportal{nullptr}
+    , gpa{}
+    , _stutype(StuType::Unknown)
 {
 
 }
@@ -140,6 +142,7 @@ void ScoreSheet::network_finished(QNetworkReply *response)
     // Score adding...
     QString stu_type = dataobj["xslb"].toString();
     if (stu_type == "bks") {
+        _stutype = StuType::Undergraduate;
         QJsonArray scores = dataobj["cjxx"].toArray();
         for (const auto &i : scores) {
             QJsonObject iobj = i.toObject();
@@ -151,6 +154,7 @@ void ScoreSheet::network_finished(QNetworkReply *response)
         gpa = dataobj["gpa"].toObject()["gpa"].toString().toDouble();
     }
     else if (stu_type == "yjs") {
+        _stutype = StuType::Graduate;
         QJsonArray scores = dataobj["scoreLists"].toArray();
         int cnt = 0;
         double totalgp = 0.0;
@@ -167,8 +171,14 @@ void ScoreSheet::network_finished(QNetworkReply *response)
         gpa = totalgp / cnt;
     }
     else {
+        _stutype = StuType::Unknown;
         emit finished(false, "Unrecognized student type");
         return;
     }
     emit finished(true, QString{});
+}
+
+bool ScoreSheet::is_undergraduate() const
+{
+    return _stutype == StuType::Undergraduate;
 }

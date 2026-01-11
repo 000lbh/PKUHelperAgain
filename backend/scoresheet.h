@@ -13,6 +13,11 @@ private:
     QMap<QString, QList<CourseEntry>> _gradelist;
     PKUPortal *internalportal;
     double gpa;
+    enum class StuType {
+        Unknown = 0,
+        Undergraduate,
+        Graduate,
+    } _stutype;
 public:
     explicit ScoreSheet(QObject *parent = nullptr);
     QList<QString> get_available_sems() const;
@@ -26,6 +31,7 @@ public:
     QMap<QString, QList<CourseEntry>> &get_gradelist();
     const QMap<QString, QList<CourseEntry>> &get_gradelist() const;
     const QMap<QString, QList<CourseEntry>> &get_gradelist_const() const;
+    bool is_undergraduate() const;
 
 private slots:
     void network_finished(QNetworkReply *response);

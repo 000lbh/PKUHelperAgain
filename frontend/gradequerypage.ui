@@ -210,10 +210,10 @@
     <item>
      <widget class="QRadioButton" name="thColorBtn">
       <property name="toolTip">
-       <string>如同树洞成绩查询那样的染色</string>
+       <string>如同之前的树洞成绩查询那样的染色，满分有彩虹</string>
       </property>
       <property name="text">
-       <string>树洞染色</string>
+       <string>（前）树洞染色</string>
       </property>
      </widget>
     </item>

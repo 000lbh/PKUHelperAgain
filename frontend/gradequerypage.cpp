@@ -265,7 +265,12 @@ void GradeQueryPage::updateDisplay() {
             ui->GradeTable->setItem(row, 2, new QTableWidgetItem(std::move(teacher)));
             ui->GradeTable->setItem(row, 3, new QTableWidgetItem(QString::number(grade.credit)));
             ui->GradeTable->setItem(row, 4, new GradeTableItem(grade.grade, ui->scoreVisBox->isChecked()));
-            ui->GradeTable->setItem(row, 5, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + grade.execute_plan_id));
+            if (cur_scores->is_undergraduate()) {
+                ui->GradeTable->setItem(row, 5, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + grade.execute_plan_id));
+            }
+            else {
+                ui->GradeTable->setItem(row, 5, new QTableWidgetItem(QString{"研究生不支持此功能"}));
+            }
             row++;
         }
     }
