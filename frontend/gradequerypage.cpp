@@ -235,7 +235,7 @@ void GradeQueryPage::updateGrade(bool success, QString reason) {
             if (tray && !isVisible())
                 tray->showMessage("成绩更新", QString{"你新增了%1门成绩，撤回了%2门成绩"}.arg(add.size(), deleted.size()));
             else
-                QMessageBox::information(this, "Score Update", QString::asprintf("You have %d course(s) added and %d course(s) deleted", add.size(), deleted.size()));
+                QMessageBox::information(this, "Score Update", QString::asprintf("You have %d course(s) added and %d course(s) deleted", static_cast<int>(add.size()), static_cast<int>(deleted.size())));
         }
         delete cur_scores;
     }
@@ -269,7 +269,7 @@ void GradeQueryPage::updateDisplay() {
                 ui->GradeTable->setItem(row, 5, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=BK&course_seq_no=" + grade.execute_plan_id));
             }
             else {
-                ui->GradeTable->setItem(row, 5, new QTableWidgetItem(QString{"研究生不支持此功能"}));
+                ui->GradeTable->setItem(row, 5, new RefTableItem("双击查看", "https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/courseDetail/getCourseDetail.do?kclx=YJ&course_seq_no=" + grade.execute_plan_id));
             }
             row++;
         }
